@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>SVMH — Full Competitor Intelligence (60 companies)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{--sand:#F4F0E8;--ink:#12181C;--mute:#6B737A;--line:rgba(18,24,28,.09);--steel:#1B3A4B;--copper:#C46B3A;--safe:#2F6F4E;--alert:#A63D3D;--white:#FFFcf7;--font:"Manrope",system-ui,sans-serif;--serif:"Cormorant Garamond",Georgia,serif;--max:1200px;--pad:clamp(1.25rem,4vw,2.5rem);--ease:cubic-bezier(.22,1,.36,1)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:5rem}
+body{font-family:var(--font);background:var(--sand);color:var(--ink);font-size:15.5px;line-height:1.55;font-weight:400;-webkit-font-smoothing:antialiased}
+a{color:var(--copper);text-decoration:none}a:hover{opacity:.8}
+.progress{position:fixed;top:0;left:0;height:2px;width:0;background:var(--copper);z-index:200}
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;border-bottom:1px solid transparent;transition:.35s var(--ease)}
+.nav.scrolled{background:rgba(244,240,232,.9);backdrop-filter:blur(14px);border-bottom-color:var(--line)}
+.nav-i{max-width:calc(var(--max)+4rem);margin:0 auto;padding:0 var(--pad);height:60px;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.logo{display:flex;align-items:center;gap:.65rem;font-weight:600;font-size:.8rem;letter-spacing:.04em;text-transform:uppercase;color:var(--ink);text-decoration:none}
+.logo i{width:26px;height:26px;background:var(--steel);color:var(--sand);display:grid;place-items:center;font-size:.58rem;font-weight:700;font-style:normal}
+.links{display:flex;gap:.1rem;overflow-x:auto;scrollbar-width:none}
+.links a{color:var(--mute);font-size:.72rem;font-weight:500;padding:.35rem .55rem;white-space:nowrap;text-decoration:none}
+.links a:hover{color:var(--ink)}
+.cta{font-size:.7rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#fff!important;background:var(--steel);padding:.5rem .9rem!important;text-decoration:none!important}
+.cta:hover{background:var(--copper);opacity:1}
+@media(max-width:800px){.links{display:none}}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 var(--pad)}
+section{padding:clamp(3.5rem,8vw,5.5rem) 0;border-top:1px solid var(--line)}
+.eyebrow{font-size:.68rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--copper);margin-bottom:1rem;display:flex;align-items:center;gap:.65rem}
+.eyebrow::before{content:"";width:1.25rem;height:1px;background:var(--copper)}
+h1{font-family:var(--serif);font-size:clamp(2.4rem,5.5vw,3.75rem);font-weight:500;line-height:1.05;max-width:16ch;letter-spacing:-.02em}
+h1 em,h2 em{font-style:italic;font-weight:400;color:var(--steel)}
+h2{font-family:var(--serif);font-size:clamp(1.7rem,3.2vw,2.4rem);font-weight:500;line-height:1.12;margin-bottom:.75rem;max-width:22ch;letter-spacing:-.02em}
+h3{font-size:1rem;font-weight:600;margin-bottom:.6rem}
+.lead{font-size:1.05rem;font-weight:300;color:var(--mute);max-width:48ch;line-height:1.65;margin-top:1.1rem}
+.sub{font-size:.95rem;font-weight:300;color:var(--mute);max-width:52ch;line-height:1.65;margin-bottom:1.75rem}
+.hero{padding:7.5rem 0 2.5rem}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-top:2.5rem}
+@media(max-width:800px){.stats{grid-template-columns:repeat(2,1fr)}}
+.stat{background:var(--white);padding:1.25rem 1rem}
+.stat b{display:block;font-family:var(--serif);font-size:1.85rem;font-weight:500;line-height:1;margin-bottom:.3rem}
+.stat span{font-size:.72rem;color:var(--mute);font-weight:500}
+.tabs{display:flex;flex-wrap:wrap;gap:.4rem;margin:1.5rem 0 1.25rem}
+.tab{font-size:.72rem;font-weight:600;letter-spacing:.04em;padding:.45rem .85rem;border:1px solid var(--line);background:var(--white);color:var(--mute);cursor:pointer;transition:.2s}
+.tab:hover,.tab.on{background:var(--ink);color:var(--sand);border-color:var(--ink)}
+.panel{background:var(--white);border:1px solid var(--line);overflow:hidden}
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);background:var(--white)}
+table{width:100%;border-collapse:collapse;font-size:.8rem;min-width:900px}
+th{text-align:left;padding:.7rem .85rem;background:var(--ink);color:var(--sand);font-size:.62rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;position:sticky;top:0;z-index:1}
+td{padding:.65rem .85rem;border-top:1px solid var(--line);color:var(--mute);vertical-align:top}
+td strong{color:var(--ink);font-weight:600}
+tr:hover td{background:rgba(255,255,255,.7)}
+tr.sv td{background:rgba(196,107,58,.07)}
+tr.sv td strong{color:var(--copper)}
+a.ext{color:var(--steel);font-size:.75rem;word-break:break-all}
+.badge{display:inline-block;font-size:.62rem;font-weight:700;letter-spacing:.04em;padding:.2rem .45rem;border:1px solid var(--line);text-transform:uppercase;white-space:nowrap}
+.b-high{color:var(--alert);border-color:rgba(166,61,61,.35);background:rgba(166,61,61,.06)}
+.b-med{color:var(--copper);border-color:rgba(196,107,58,.35);background:rgba(196,107,58,.06)}
+.b-low{color:var(--mute)}
+.b-ref{color:var(--steel);border-color:rgba(27,58,75,.3);background:rgba(27,58,75,.05)}
+.b-ok{color:var(--safe);border-color:rgba(47,111,78,.3);background:rgba(47,111,78,.06)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem}
+@media(max-width:900px){.grid2,.grid3{grid-template-columns:1fr}}
+.card{background:var(--white);border:1px solid var(--line);padding:1.35rem 1.25rem}
+.card h3{font-family:var(--serif);font-size:1.25rem;font-weight:500;margin-bottom:.35rem}
+.card .meta{font-size:.72rem;color:var(--mute);margin-bottom:.75rem}
+.card p{font-size:.84rem;color:var(--mute);font-weight:300;line-height:1.5}
+.card ul{list-style:none;margin-top:.6rem}
+.card li{font-size:.8rem;color:var(--mute);padding:.22rem 0;padding-left:.85rem;position:relative;font-weight:300}
+.card li::before{content:"·";position:absolute;left:0;color:var(--copper)}
+.score{display:inline-flex;width:22px;height:22px;align-items:center;justify-content:center;font-size:.68rem;font-weight:700}
+.s5,.s4{background:rgba(47,111,78,.12);color:var(--safe)}
+.s3{background:rgba(196,107,58,.12);color:var(--copper)}
+.s2,.s1{background:rgba(166,61,61,.1);color:var(--alert)}
+.s0{background:rgba(166,61,61,.08);color:var(--alert)}
+.note{font-size:.78rem;color:var(--mute);font-weight:300;margin-top:1rem;line-height:1.5}
+.tier-pills{display:flex;flex-wrap:wrap;gap:.4rem;margin:1rem 0 1.5rem}
+.pill{font-size:.72rem;font-weight:600;padding:.4rem .75rem;border:1px solid var(--line);background:var(--white);color:var(--mute)}
+.pill b{color:var(--ink);margin-left:.25rem}
+.filter-hide{display:none!important}
+footer{padding:2rem 0;font-size:.78rem;color:var(--mute);border-top:1px solid var(--line)}
+.foot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+footer strong{color:var(--ink)}
+.region{font-size:.65rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--steel);margin-bottom:.25rem}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<nav class="nav" id="nav">
+  <div class="nav-i">
+    <a class="logo" href="index.html"><i>SV</i> Competitor Intel</a>
+    <div class="links">
+      <a href="#overview">Overview</a>
+      <a href="#intl">International</a>
+      <a href="#audits">Site audits</a>
+      <a href="#master">Full database</a>
+      <a href="#india">India</a>
+      <a href="#local">Bengaluru</a>
+      <a href="#threats">Threats</a>
+    </div>
+    <a class="cta" href="company.html">Company</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Full research dump · Phase 1 · Jul 2026</div>
+    <h1>Every competitor we mapped.<br/><em>India + international.</em></h1>
+    <p class="lead">Not a shortlist — the complete competitive database from research: global leaders, EU premium, China exporters, Indian majors, South-India regionals, same-street Bengaluru shops, and adjacent PEB/service players. 60 rows with HQ, site, overlap, threat, and notes.</p>
+    <div class="stats">
+      <div class="stat"><b>60</b><span>Companies listed</span></div>
+      <div class="stat"><b>16</b><span>International</span></div>
+      <div class="stat"><b>44</b><span>India / local</span></div>
+      <div class="stat"><b>8</b><span>Full website audits</span></div>
+      <div class="stat"><b>9</b><span>High / med-high threats</span></div>
+    </div>
+  </div>
+</header>
+
+<section id="overview">
+  <div class="wrap">
+    <div class="eyebrow">01 · Landscape</div>
+    <h2>Tier distribution &amp; structure</h2>
+    <p class="sub">71 raw index entries deduplicated into this working set. Duplicates (ElectroMech ×3, Anupam ×3, K2 ×2, etc.) collapsed with richest detail kept.</p>
+    <div class="tier-pills">
+      <span class="pill">Global leader <b>7</b></span>
+      <span class="pill">Premium EU <b>6</b></span>
+      <span class="pill">China / export intl <b>4</b></span>
+      <span class="pill">Indian leader <b>6</b></span>
+      <span class="pill">Regional / local <b>~30</b></span>
+      <span class="pill">Adjacent <b>7</b></span>
+      <span class="pill">SVMH <b>1</b></span>
+    </div>
+    <div class="grid3">
+      <div class="card">
+        <h3>International</h3>
+        <p>Finland, Germany, UK, Spain, France, USA, Japan, China. Benchmarks for digital depth — not same price tier as SVMH ₹10–35L jobs.</p>
+      </div>
+      <div class="card">
+        <h3>India national</h3>
+        <p>ElectroMech, Anupam, WMI, Indef, Elecon, Josts. Set buyer expectations on engineering + after-sales + web polish.</p>
+      </div>
+      <div class="card">
+        <h3>Real battleground</h3>
+        <p>South India + Bengaluru locals + SEO attackers (K2, Gearcon). Same buyers. Digital is the gap.</p>
+      </div>
+    </div>
+    <p class="note"><strong>Consolidation:</strong> CMCO × Kito Crosby (Feb 2026, ~USD 2.7B) · Konecranes owns Demag + WMI · STAHL inside CMCO · Verlinde inside Konecranes · ABUS exclusive with ElectroMech India.</p>
+  </div>
+</section>
+
+<section id="intl">
+  <div class="wrap">
+    <div class="eyebrow">02 · International comparison</div>
+    <h2>Global leaders, EU premium, China volume</h2>
+    <p class="sub">How international players operate — product depth, digital, ownership. Use as copy/avoid reference, not head-to-head price war.</p>
+    <div class="grid3">
+      <div class="card" data-tier="global-leader" data-region="intl">
+<div class="region">International · Finland</div>
+<h3>Konecranes</h3>
+<div class="meta">Hyvinkää, Finland · global-leader · <span class="badge b-ref">Benchmark</span></div>
+<p>~USD 3B+, 16k employees, 50+ countries. Owns Demag + WMI. CXT + smart IoT. Global digital benchmark.</p>
+<ul><li>Founded 1994 (heritage 1933). India via WMI. Audit: Tech 5 · IA 4 · RFQ 3 · SEO 4 · India 2</li>
+<li><a class="ext" href="https://www.konecranes.com" target="_blank">https://www.konecranes.com</a></li></ul>
+</div><div class="card" data-tier="global-leader" data-region="intl">
+<div class="region">International · Germany</div>
+<h3>Demag Cranes &amp; Components</h3>
+<div class="meta">Wetter, Germany (Konecranes) · global-leader · <span class="badge b-ref">Benchmark</span></div>
+<p>200+ yr legacy. V-type girder. Heavy/process. Strong India. Premium site benchmark.</p>
+<ul><li>Audit: Tech 5 · IA 4 · RFQ 3 · SEO 3 · India 2. PDF RFQ friction.</li>
+<li><a class="ext" href="https://www.demagcranes.com" target="_blank">https://www.demagcranes.com</a></li></ul>
+</div><div class="card" data-tier="global-leader" data-region="intl">
+<div class="region">International · USA</div>
+<h3>Columbus McKinnon (CMCO)</h3>
+<div class="meta">Charlotte, NC, USA · global-leader · <span class="badge b-ref">Benchmark</span></div>
+<p>Nasdaq CMCO. 140+ yrs. Completed Kito Crosby acquisition Feb 2026 (~USD 2.7B). Owns STAHL.</p>
+<ul><li>Audit: Tech 4 · IA 4 · RFQ 3 · SEO 3 · India 2. Diffuse CTAs.</li>
+<li><a class="ext" href="https://www.cmco.com" target="_blank">https://www.cmco.com</a></li></ul>
+</div><div class="card" data-tier="global-leader" data-region="intl">
+<div class="region">International · Japan/USA</div>
+<h3>Kito Crosby (Kito Corp)</h3>
+<div class="meta">Yamanashi, Japan / Arlington TX · global-leader · <span class="badge b-ref">Benchmark</span></div>
+<p>Japanese precision hoists est. 1932 + Crosby securement. Now CMCO. Premium compact cranes.</p>
+<ul><li>Audit: Tech 5 · IA 4 · RFQ 2 · SEO 3 · Perf 2 · India 2. Gated CAD+CAPTCHA.</li>
+<li><a class="ext" href="https://kitocrosby.com" target="_blank">https://kitocrosby.com</a></li></ul>
+</div><div class="card" data-tier="global-leader" data-region="intl">
+<div class="region">International · China</div>
+<h3>Weihua Crane Group</h3>
+<div class="meta">Changyuan, Henan, China · global-leader · <span class="badge b-med">Medium</span></div>
+<p>Asia&#x27;s largest industrial crane maker. 300+ models, 6,000+/yr, 130+ countries. Aggressive SEO.</p>
+<ul><li>Export threat via IndiaMART/ExportersIndia. FEM/DIN/CE/ISO. Founded 1988.</li>
+<li><a class="ext" href="https://www.globalweihua.com" target="_blank">https://www.globalweihua.com</a></li></ul>
+</div><div class="card" data-tier="global-leader" data-region="intl">
+<div class="region">International · China</div>
+<h3>Eurocrane (China) Co., Ltd.</h3>
+<div class="meta">Suzhou / Shanghai, China · global-leader · <span class="badge b-med">Medium</span></div>
+<p>SSE 603966. FY2025 rev CN¥2.43B (~USD 340M). Cranes, hoists, transmission. Export push.</p>
+<ul><li>Listed Jan 2017. Asia partners (Thailand). Volume competitor.</li>
+<li><a class="ext" href="https://www.eurocranegroup.com" target="_blank">https://www.eurocranegroup.com</a></li></ul>
+</div><div class="card" data-tier="global-leader" data-region="intl">
+<div class="region">International · India ops</div>
+<h3>Konecranes &amp; Demag Pvt Ltd (India)</h3>
+<div class="meta">Mumbai / Pune via WMI · global-leader · <span class="badge b-med">Medium</span></div>
+<p>Global #1 India footprint. Heavy process/steel. Premium standard cranes.</p>
+<ul><li>Acquired WMI. Dominates high-spec steel/foundry vs SVMH niche ambitions.</li>
+<li><a class="ext" href="https://www.konecranes.com" target="_blank">https://www.konecranes.com</a></li></ul>
+</div><div class="card" data-tier="premium" data-region="intl">
+<div class="region">International · Germany</div>
+<h3>ABUS Kransysteme</h3>
+<div class="meta">Gummersbach, Germany · premium · <span class="badge b-ref">Benchmark</span></div>
+<p>Family-owned est. ~1965. ZLK low-headroom. 1,300+ employees EU. 5,000+ cranes/yr. 80kg–120t.</p>
+<ul><li>Audit: Tech 5 · IA 4 · RFQ 3 · SEO 3 · India 1. ElectroMech exclusive India partner.</li>
+<li><a class="ext" href="https://www.abus-kransysteme.de" target="_blank">https://www.abus-kransysteme.de</a></li></ul>
+</div><div class="card" data-tier="premium" data-region="intl">
+<div class="region">International · UK</div>
+<h3>Street Crane Company</h3>
+<div class="meta">Chapel-en-le-Frith, UK · premium · <span class="badge b-ref">Benchmark</span></div>
+<p>Britain&#x27;s leading crane maker est. 1946. Family. ZX hoist. Kits to independent builders.</p>
+<ul><li>Audit: Tech 4 · IA 3 · RFQ 3 · SEO 3 · India 1. Model: sell components to builders.</li>
+<li><a class="ext" href="https://www.streetcrane.co.uk" target="_blank">https://www.streetcrane.co.uk</a></li></ul>
+</div><div class="card" data-tier="premium" data-region="intl">
+<div class="region">International · Spain</div>
+<h3>GH Cranes &amp; Components</h3>
+<div class="meta">Bergara, Spain · premium · <span class="badge b-ref">Benchmark</span></div>
+<p>60+ yrs. 125,000+ installed. Vertical hoist+crane. GH Smart Control. india.ghcranes.com.</p>
+<ul><li>Audit: Tech 4 · IA 4 dual-axis · RFQ 3 · SEO 3 · India 2. Strong component model mirror.</li>
+<li><a class="ext" href="https://www.ghcranes.com" target="_blank">https://www.ghcranes.com</a></li></ul>
+</div><div class="card" data-tier="premium" data-region="intl">
+<div class="region">International · Germany</div>
+<h3>STAHL CraneSystems</h3>
+<div class="meta">Künzelsau, Germany (CMCO) · premium · <span class="badge b-ref">Benchmark</span></div>
+<p>Est. 1876. Explosion-proof ATEX leader. Hoist/component specialist. CMCO since 2017.</p>
+<ul><li>Audit: Tech 4 · IA 2 brand-lost · RFQ 2 · SEO 3 · India 1.</li>
+<li><a class="ext" href="https://www.stahlcranes.com" target="_blank">https://www.stahlcranes.com</a></li></ul>
+</div><div class="card" data-tier="premium" data-region="intl">
+<div class="region">International · Germany</div>
+<h3>SWF Krantechnik</h3>
+<div class="meta">Mannheim, Germany · premium · <span class="badge b-ref">Reference</span></div>
+<p>Est. 1921. Crane kits/components for independent builders worldwide. Wire-rope hoists.</p>
+<ul><li>B2B component model — not end-user builder. Hoist reference for SVMH crab units.</li>
+<li><a class="ext" href="https://www.swfkrantechnik.com" target="_blank">https://www.swfkrantechnik.com</a></li></ul>
+</div><div class="card" data-tier="premium" data-region="intl">
+<div class="region">International · France</div>
+<h3>Verlinde</h3>
+<div class="meta">Vernouillet, France (Konecranes) · premium · <span class="badge b-ref">Reference</span></div>
+<p>Est. 1858. EUROBLOC hoists. Global distributor/builder network. Konecranes group since 1993.</p>
+<ul><li>Premium component benchmark for hoist/crab lines.</li>
+<li><a class="ext" href="https://www.verlinde.com" target="_blank">https://www.verlinde.com</a></li></ul>
+</div><div class="card" data-tier="adjacent-industry" data-region="intl">
+<div class="region">International · Switzerland/Germany</div>
+<h3>Liebherr</h3>
+<div class="meta">Bulle / Biberach · adjacent-industry · <span class="badge b-ref">Reference</span></div>
+<p>Global heavy machinery. Mobile/tower/maritime mainly — not factory EOT. Brand perception ref.</p>
+<ul><li>Adjacent only. Premium heavy-lift brand perception.</li>
+<li><a class="ext" href="https://www.liebherr.com" target="_blank">https://www.liebherr.com</a></li></ul>
+</div><div class="card" data-tier="low-cost" data-region="intl">
+<div class="region">International · China</div>
+<h3>Nucleon Crane Group</h3>
+<div class="meta">Xinxiang, Henan, China · low-cost · <span class="badge b-med">Medium</span></div>
+<p>Fast-growing Chinese exporter. EU-style design + low cost + digital monitoring.</p>
+<ul><li>Price-sensitive export enquiries SVMH chases online.</li>
+<li><a class="ext" href="https://www.nucleoncrane.com" target="_blank">https://www.nucleoncrane.com</a></li></ul>
+</div><div class="card" data-tier="export-focused" data-region="intl">
+<div class="region">International · China</div>
+<h3>HY Crane (Henan Hengyang)</h3>
+<div class="meta">Henan, China · export-focused · <span class="badge b-low">Low</span></div>
+<p>Aggressive content marketing; publishes own &#x27;top 10&#x27; rankings. Export SEO competitor.</p>
+<ul><li>Competes for same online export leads as IndiaMART exporters.</li>
+<li><a class="ext" href="https://www.hycranes.com" target="_blank">https://www.hycranes.com</a></li></ul>
+</div>
+    </div>
+  </div>
+</section>
+
+<section id="audits">
+  <div class="wrap">
+    <div class="eyebrow">03 · International website audits (0–5)</div>
+    <h2>Eight premium sites scored</h2>
+    <p class="sub">Tech depth · IA/Nav · Conversion/RFQ · SEO/Schema · Perf/Mobile · India fit. Live scrapes 2026-07-05.</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>Site</th><th>Tech</th><th>IA</th><th>RFQ</th><th>SEO</th><th>Perf</th><th>India</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Konecranes</strong></td><td><span class="score s5">5</span></td><td><span class="score s4">4</span></td><td><span class="score s3">3</span></td><td><span class="score s4">4</span></td><td><span class="score s3">3</span></td><td><span class="score s2">2</span></td></tr><tr><td><strong>Demag</strong></td><td><span class="score s5">5</span></td><td><span class="score s4">4</span></td><td><span class="score s3">3</span></td><td><span class="score s3">3</span></td><td><span class="score s3">3</span></td><td><span class="score s2">2</span></td></tr><tr><td><strong>ABUS</strong></td><td><span class="score s5">5</span></td><td><span class="score s4">4</span></td><td><span class="score s3">3</span></td><td><span class="score s3">3</span></td><td><span class="score s3">3</span></td><td><span class="score s1">1</span></td></tr><tr><td><strong>Street Crane</strong></td><td><span class="score s4">4</span></td><td><span class="score s3">3</span></td><td><span class="score s3">3</span></td><td><span class="score s3">3</span></td><td><span class="score s3">3</span></td><td><span class="score s1">1</span></td></tr><tr><td><strong>GH Cranes</strong></td><td><span class="score s4">4</span></td><td><span class="score s4">4</span></td><td><span class="score s3">3</span></td><td><span class="score s3">3</span></td><td><span class="score s3">3</span></td><td><span class="score s2">2</span></td></tr><tr><td><strong>STAHL (CMCO)</strong></td><td><span class="score s4">4</span></td><td><span class="score s2">2</span></td><td><span class="score s2">2</span></td><td><span class="score s3">3</span></td><td><span class="score s3">3</span></td><td><span class="score s1">1</span></td></tr><tr><td><strong>Columbus McKinnon</strong></td><td><span class="score s4">4</span></td><td><span class="score s4">4</span></td><td><span class="score s3">3</span></td><td><span class="score s3">3</span></td><td><span class="score s3">3</span></td><td><span class="score s2">2</span></td></tr><tr><td><strong>Kito Crosby</strong></td><td><span class="score s5">5</span></td><td><span class="score s4">4</span></td><td><span class="score s2">2</span></td><td><span class="score s3">3</span></td><td><span class="score s2">2</span></td><td><span class="score s2">2</span></td></tr><tr class="sv"><td><strong>SVMH (baseline)</strong></td><td><span class="score s0">0</span></td><td><span class="score s0">0</span></td><td><span class="score s0">0</span></td><td><span class="score s0">0</span></td><td><span class="score s0">0</span></td><td><span class="score s0">0</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="grid2" style="margin-top:1rem">
+      <div class="card">
+        <h3>Copy from internationals</h3>
+        <ul>
+          <li>Dual-axis nav (products × industries) — GH, Demag, Kito, Konecranes</li>
+          <li>Numeric technical product pages + datasheets</li>
+          <li>Proof density: installs, logos, cases</li>
+          <li>Configurators later (Phase 4 lightweight)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Exploit their gaps</h3>
+        <ul>
+          <li>RFQ friction — leave product page / gate CAD</li>
+          <li>Zero ₹ price content</li>
+          <li>Thin India localization (IS codes, local service)</li>
+          <li>Carousel heroes · heavy pages · schema misses</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="master">
+  <div class="wrap">
+    <div class="eyebrow">04 · Master database</div>
+    <h2>Full comparison table</h2>
+    <p class="sub">Filter by geography or tier. SVMH row highlighted. Scroll horizontally on mobile.</p>
+    <div class="tabs" id="filters">
+      <button class="tab on" data-f="all">All (60)</button>
+      <button class="tab" data-f="intl">International only</button>
+      <button class="tab" data-f="india">India (all)</button>
+      <button class="tab" data-f="local">Bengaluru / KA local</button>
+      <button class="tab" data-f="high">High threats</button>
+      <button class="tab" data-f="global-leader">Global leaders</button>
+      <button class="tab" data-f="premium">Premium EU</button>
+      <button class="tab" data-f="indian-leader">Indian leaders</button>
+      <button class="tab" data-f="regional">Regional</button>
+      <button class="tab" data-f="adjacent-industry">Adjacent</button>
+    </div>
+    <div class="tbl-wrap" style="max-height:70vh;overflow:auto">
+      <table id="master-table">
+        <thead>
+          <tr>
+            <th>Company</th>
+            <th>Tier</th>
+            <th>HQ</th>
+            <th>Website</th>
+            <th>Why relevant / overlap</th>
+            <th>Threat</th>
+            <th>Notes / digital</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="" data-tier="global-leader" data-region="intl" data-threat="bench">
+<td><strong>Konecranes</strong><div class="region">International · Finland</div></td>
+<td><span class="badge b-low">global-leader</span></td>
+<td>Hyvinkää, Finland</td>
+<td><a class="ext" href="https://www.konecranes.com" target="_blank" rel="noopener">https://www.konecranes.com</a></td>
+<td>~USD 3B+, 16k employees, 50+ countries. Owns Demag + WMI. CXT + smart IoT. Global digital benchmark.</td>
+<td><span class="badge b-ref">Benchmark</span></td>
+<td>Founded 1994 (heritage 1933). India via WMI. Audit: Tech 5 · IA 4 · RFQ 3 · SEO 4 · India 2</td>
+</tr><tr class="" data-tier="global-leader" data-region="intl" data-threat="bench">
+<td><strong>Demag Cranes &amp; Components</strong><div class="region">International · Germany</div></td>
+<td><span class="badge b-low">global-leader</span></td>
+<td>Wetter, Germany (Konecranes)</td>
+<td><a class="ext" href="https://www.demagcranes.com" target="_blank" rel="noopener">https://www.demagcranes.com</a></td>
+<td>200+ yr legacy. V-type girder. Heavy/process. Strong India. Premium site benchmark.</td>
+<td><span class="badge b-ref">Benchmark</span></td>
+<td>Audit: Tech 5 · IA 4 · RFQ 3 · SEO 3 · India 2. PDF RFQ friction.</td>
+</tr><tr class="" data-tier="global-leader" data-region="intl" data-threat="bench">
+<td><strong>Columbus McKinnon (CMCO)</strong><div class="region">International · USA</div></td>
+<td><span class="badge b-low">global-leader</span></td>
+<td>Charlotte, NC, USA</td>
+<td><a class="ext" href="https://www.cmco.com" target="_blank" rel="noopener">https://www.cmco.com</a></td>
+<td>Nasdaq CMCO. 140+ yrs. Completed Kito Crosby acquisition Feb 2026 (~USD 2.7B). Owns STAHL.</td>
+<td><span class="badge b-ref">Benchmark</span></td>
+<td>Audit: Tech 4 · IA 4 · RFQ 3 · SEO 3 · India 2. Diffuse CTAs.</td>
+</tr><tr class="" data-tier="global-leader" data-region="intl" data-threat="bench">
+<td><strong>Kito Crosby (Kito Corp)</strong><div class="region">International · Japan/USA</div></td>
+<td><span class="badge b-low">global-leader</span></td>
+<td>Yamanashi, Japan / Arlington TX</td>
+<td><a class="ext" href="https://kitocrosby.com" target="_blank" rel="noopener">https://kitocrosby.com</a></td>
+<td>Japanese precision hoists est. 1932 + Crosby securement. Now CMCO. Premium compact cranes.</td>
+<td><span class="badge b-ref">Benchmark</span></td>
+<td>Audit: Tech 5 · IA 4 · RFQ 2 · SEO 3 · Perf 2 · India 2. Gated CAD+CAPTCHA.</td>
+</tr><tr class="" data-tier="global-leader" data-region="intl" data-threat="med">
+<td><strong>Weihua Crane Group</strong><div class="region">International · China</div></td>
+<td><span class="badge b-low">global-leader</span></td>
+<td>Changyuan, Henan, China</td>
+<td><a class="ext" href="https://www.globalweihua.com" target="_blank" rel="noopener">https://www.globalweihua.com</a></td>
+<td>Asia&#x27;s largest industrial crane maker. 300+ models, 6,000+/yr, 130+ countries. Aggressive SEO.</td>
+<td><span class="badge b-med">Medium</span></td>
+<td>Export threat via IndiaMART/ExportersIndia. FEM/DIN/CE/ISO. Founded 1988.</td>
+</tr><tr class="" data-tier="global-leader" data-region="intl" data-threat="med">
+<td><strong>Eurocrane (China) Co., Ltd.</strong><div class="region">International · China</div></td>
+<td><span class="badge b-low">global-leader</span></td>
+<td>Suzhou / Shanghai, China</td>
+<td><a class="ext" href="https://www.eurocranegroup.com" target="_blank" rel="noopener">https://www.eurocranegroup.com</a></td>
+<td>SSE 603966. FY2025 rev CN¥2.43B (~USD 340M). Cranes, hoists, transmission. Export push.</td>
+<td><span class="badge b-med">Medium</span></td>
+<td>Listed Jan 2017. Asia partners (Thailand). Volume competitor.</td>
+</tr><tr class="" data-tier="global-leader" data-region="intl" data-threat="med">
+<td><strong>Konecranes &amp; Demag Pvt Ltd (India)</strong><div class="region">International · India ops</div></td>
+<td><span class="badge b-low">global-leader</span></td>
+<td>Mumbai / Pune via WMI</td>
+<td><a class="ext" href="https://www.konecranes.com" target="_blank" rel="noopener">https://www.konecranes.com</a></td>
+<td>Global #1 India footprint. Heavy process/steel. Premium standard cranes.</td>
+<td><span class="badge b-med">Medium</span></td>
+<td>Acquired WMI. Dominates high-spec steel/foundry vs SVMH niche ambitions.</td>
+</tr><tr class="" data-tier="premium" data-region="intl" data-threat="bench">
+<td><strong>ABUS Kransysteme</strong><div class="region">International · Germany</div></td>
+<td><span class="badge b-low">premium</span></td>
+<td>Gummersbach, Germany</td>
+<td><a class="ext" href="https://www.abus-kransysteme.de" target="_blank" rel="noopener">https://www.abus-kransysteme.de</a></td>
+<td>Family-owned est. ~1965. ZLK low-headroom. 1,300+ employees EU. 5,000+ cranes/yr. 80kg–120t.</td>
+<td><span class="badge b-ref">Benchmark</span></td>
+<td>Audit: Tech 5 · IA 4 · RFQ 3 · SEO 3 · India 1. ElectroMech exclusive India partner.</td>
+</tr><tr class="" data-tier="premium" data-region="intl" data-threat="bench">
+<td><strong>Street Crane Company</strong><div class="region">International · UK</div></td>
+<td><span class="badge b-low">premium</span></td>
+<td>Chapel-en-le-Frith, UK</td>
+<td><a class="ext" href="https://www.streetcrane.co.uk" target="_blank" rel="noopener">https://www.streetcrane.co.uk</a></td>
+<td>Britain&#x27;s leading crane maker est. 1946. Family. ZX hoist. Kits to independent builders.</td>
+<td><span class="badge b-ref">Benchmark</span></td>
+<td>Audit: Tech 4 · IA 3 · RFQ 3 · SEO 3 · India 1. Model: sell components to builders.</td>
+</tr><tr class="" data-tier="premium" data-region="intl" data-threat="bench">
+<td><strong>GH Cranes &amp; Components</strong><div class="region">International · Spain</div></td>
+<td><span class="badge b-low">premium</span></td>
+<td>Bergara, Spain</td>
+<td><a class="ext" href="https://www.ghcranes.com" target="_blank" rel="noopener">https://www.ghcranes.com</a></td>
+<td>60+ yrs. 125,000+ installed. Vertical hoist+crane. GH Smart Control. india.ghcranes.com.</td>
+<td><span class="badge b-ref">Benchmark</span></td>
+<td>Audit: Tech 4 · IA 4 dual-axis · RFQ 3 · SEO 3 · India 2. Strong component model mirror.</td>
+</tr><tr class="" data-tier="premium" data-region="intl" data-threat="bench">
+<td><strong>STAHL CraneSystems</strong><div class="region">International · Germany</div></td>
+<td><span class="badge b-low">premium</span></td>
+<td>Künzelsau, Germany (CMCO)</td>
+<td><a class="ext" href="https://www.stahlcranes.com" target="_blank" rel="noopener">https://www.stahlcranes.com</a></td>
+<td>Est. 1876. Explosion-proof ATEX leader. Hoist/component specialist. CMCO since 2017.</td>
+<td><span class="badge b-ref">Benchmark</span></td>
+<td>Audit: Tech 4 · IA 2 brand-lost · RFQ 2 · SEO 3 · India 1.</td>
+</tr><tr class="" data-tier="premium" data-region="intl" data-threat="ref">
+<td><strong>SWF Krantechnik</strong><div class="region">International · Germany</div></td>
+<td><span class="badge b-low">premium</span></td>
+<td>Mannheim, Germany</td>
+<td><a class="ext" href="https://www.swfkrantechnik.com" target="_blank" rel="noopener">https://www.swfkrantechnik.com</a></td>
+<td>Est. 1921. Crane kits/components for independent builders worldwide. Wire-rope hoists.</td>
+<td><span class="badge b-ref">Reference</span></td>
+<td>B2B component model — not end-user builder. Hoist reference for SVMH crab units.</td>
+</tr><tr class="" data-tier="premium" data-region="intl" data-threat="ref">
+<td><strong>Verlinde</strong><div class="region">International · France</div></td>
+<td><span class="badge b-low">premium</span></td>
+<td>Vernouillet, France (Konecranes)</td>
+<td><a class="ext" href="https://www.verlinde.com" target="_blank" rel="noopener">https://www.verlinde.com</a></td>
+<td>Est. 1858. EUROBLOC hoists. Global distributor/builder network. Konecranes group since 1993.</td>
+<td><span class="badge b-ref">Reference</span></td>
+<td>Premium component benchmark for hoist/crab lines.</td>
+</tr><tr class="" data-tier="adjacent-industry" data-region="intl" data-threat="ref">
+<td><strong>Liebherr</strong><div class="region">International · Switzerland/Germany</div></td>
+<td><span class="badge b-low">adjacent-industry</span></td>
+<td>Bulle / Biberach</td>
+<td><a class="ext" href="https://www.liebherr.com" target="_blank" rel="noopener">https://www.liebherr.com</a></td>
+<td>Global heavy machinery. Mobile/tower/maritime mainly — not factory EOT. Brand perception ref.</td>
+<td><span class="badge b-ref">Reference</span></td>
+<td>Adjacent only. Premium heavy-lift brand perception.</td>
+</tr><tr class="" data-tier="low-cost" data-region="intl" data-threat="med">
+<td><strong>Nucleon Crane Group</strong><div class="region">International · China</div></td>
+<td><span class="badge b-low">low-cost</span></td>
+<td>Xinxiang, Henan, China</td>
+<td><a class="ext" href="https://www.nucleoncrane.com" target="_blank" rel="noopener">https://www.nucleoncrane.com</a></td>
+<td>Fast-growing Chinese exporter. EU-style design + low cost + digital monitoring.</td>
+<td><span class="badge b-med">Medium</span></td>
+<td>Price-sensitive export enquiries SVMH chases online.</td>
+</tr><tr class="" data-tier="export-focused" data-region="intl" data-threat="low">
+<td><strong>HY Crane (Henan Hengyang)</strong><div class="region">International · China</div></td>
+<td><span class="badge b-low">export-focused</span></td>
+<td>Henan, China</td>
+<td><a class="ext" href="https://www.hycranes.com" target="_blank" rel="noopener">https://www.hycranes.com</a></td>
+<td>Aggressive content marketing; publishes own &#x27;top 10&#x27; rankings. Export SEO competitor.</td>
+<td><span class="badge b-low">Low</span></td>
+<td>Competes for same online export leads as IndiaMART exporters.</td>
+</tr><tr class="" data-tier="indian-leader" data-region="india" data-threat="high">
+<td><strong>ElectroMech Material Handling</strong><div class="region">India · National</div></td>
+<td><span class="badge b-low">indian-leader</span></td>
+<td>Pune, Maharashtra</td>
+<td><a class="ext" href="https://www.emech.com" target="_blank" rel="noopener">https://www.emech.com</a></td>
+<td>Largest EOT maker India. ~₹500–697 Cr FY25. ABUS exclusive partner. 13 industry pages, ~25 cases.</td>
+<td><span class="badge b-high">High threat</span></td>
+<td>Digital benchmark. CARE A. 10,000+ cranes. Cranedge AMC arm threat to service line.</td>
+</tr><tr class="" data-tier="indian-leader" data-region="india" data-threat="med">
+<td><strong>Anupam Industries (Anupam Group)</strong><div class="region">India · National</div></td>
+<td><span class="badge b-low">indian-leader</span></td>
+<td>Anand, Gujarat</td>
+<td><a class="ext" href="https://www.anupamgroup.com" target="_blank" rel="noopener">https://www.anupamgroup.com</a></td>
+<td>Est. 1973. Top-3 national. EOT, goliath, ladle, port, tower. JSW Dolvi 550T ladle showpiece.</td>
+<td><span class="badge b-med">Medium</span></td>
+<td>Heavy/ladle national tenders. Overlaps SVMH hot-metal ambitions at scale.</td>
+</tr><tr class="" data-tier="indian-leader" data-region="india" data-threat="med">
+<td><strong>WMI Cranes (Konecranes)</strong><div class="region">India · National</div></td>
+<td><span class="badge b-low">indian-leader</span></td>
+<td>Mumbai &amp; Jejuri (Pune)</td>
+<td><a class="ext" href="https://www.konecranes.com" target="_blank" rel="noopener">https://www.konecranes.com</a></td>
+<td>Est. 1935. 4,000+ installed. Steel industry leader (e.g. JSW ₹58 Cr). Konecranes-owned.</td>
+<td><span class="badge b-med">Medium</span></td>
+<td>Owns aspirational hot/ladle/process niche at far larger scale.</td>
+</tr><tr class="" data-tier="indian-leader" data-region="india" data-threat="med">
+<td><strong>Bajaj Indef (Hercules Hoists)</strong><div class="region">India · National</div></td>
+<td><span class="badge b-low">indian-leader</span></td>
+<td>Navi Mumbai, Maharashtra</td>
+<td><a class="ext" href="https://www.indef.com" target="_blank" rel="noopener">https://www.indef.com</a></td>
+<td>Bajaj Group. Crane &amp; hoist leader since 1962. Wire-rope &amp; chain hoists. Strong brand.</td>
+<td><span class="badge b-med">Medium</span></td>
+<td>Competes on crane + components/spares. Recent demerger Indef manufacturing.</td>
+</tr><tr class="" data-tier="indian-leader" data-region="india" data-threat="med">
+<td><strong>Elecon Engineering</strong><div class="region">India · National</div></td>
+<td><span class="badge b-low">indian-leader</span></td>
+<td>Vallabh Vidyanagar, Gujarat</td>
+<td><a class="ext" href="https://www.elecon.com" target="_blank" rel="noopener">https://www.elecon.com</a></td>
+<td>EOT/gantry + gearboxes for steel, cement, power, mining. Established industrial brand.</td>
+<td><span class="badge b-med">Medium</span></td>
+<td>Overlaps crane AND gearbox/component lines.</td>
+</tr><tr class="" data-tier="indian-leader" data-region="india" data-threat="low">
+<td><strong>Josts Engineering</strong><div class="region">India · National</div></td>
+<td><span class="badge b-low">indian-leader</span></td>
+<td>Mumbai, Maharashtra</td>
+<td><a class="ext" href="https://www.josts.in" target="_blank" rel="noopener">https://www.josts.in</a></td>
+<td>Long-established MHE. EOT, hoists, warehouse equipment. Legacy brand.</td>
+<td><span class="badge b-low">Low</span></td>
+<td>Overlaps cranes + AMC/service.</td>
+</tr><tr class="" data-tier="regional" data-region="india" data-threat="high">
+<td><strong>K2 Cranes &amp; Components</strong><div class="region">India · South (Chennai)</div></td>
+<td><span class="badge b-low">regional</span></td>
+<td>Chennai, Tamil Nadu</td>
+<td><a class="ext" href="https://k2cranes.com" target="_blank" rel="noopener">https://k2cranes.com</a></td>
+<td>Est. 2008. Claims largest South India EOT builder. 3,200+ installs. SEO pages for Karnataka/Bangalore.</td>
+<td><span class="badge b-high">High threat</span></td>
+<td>Actively bidding into SVMH home state from out of state. 24/7 service messaging.</td>
+</tr><tr class="" data-tier="regional" data-region="india" data-threat="med-high">
+<td><strong>Amsak Cranes</strong><div class="region">India · South (Chennai)</div></td>
+<td><span class="badge b-low">regional</span></td>
+<td>Chennai, Tamil Nadu</td>
+<td><a class="ext" href="https://amsakcranes.com" target="_blank" rel="noopener">https://amsakcranes.com</a></td>
+<td>201–500 employees. Top-10 India EOT. EOT/HOT to 300T, jib, gantry, winches.</td>
+<td><span class="badge b-med">Med-High</span></td>
+<td>South India scale + hot-metal. Competes larger regional tenders.</td>
+</tr><tr class="" data-tier="regional" data-region="india" data-threat="med">
+<td><strong>Mega Cranes India</strong><div class="region">India · South (Coimbatore)</div></td>
+<td><span class="badge b-low">regional</span></td>
+<td>Coimbatore, Tamil Nadu</td>
+<td><a class="ext" href="https://megacranesindia.com" target="_blank" rel="noopener">https://megacranesindia.com</a></td>
+<td>Established Coimbatore EOT maker. TN/South India marketing.</td>
+<td><span class="badge b-med">Medium</span></td>
+<td>Same core EOT portfolio as SVMH.</td>
+</tr><tr class="" data-tier="regional" data-region="india" data-threat="med">
+<td><strong>Good Shepherd Engineering</strong><div class="region">India · South (Coimbatore)</div></td>
+<td><span class="badge b-low">regional</span></td>
+<td>Coimbatore, Tamil Nadu</td>
+<td><a class="ext" href="https://www.goodshepherdenggcompany.co.in" target="_blank" rel="noopener">https://www.goodshepherdenggcompany.co.in</a></td>
+<td>Founded 2010. Single/double EOT, gantry, jib + service.</td>
+<td><span class="badge b-med">Medium</span></td>
+<td>Identical portfolio. South India rival.</td>
+</tr><tr class="" data-tier="regional" data-region="india" data-threat="low">
+<td><strong>Revathi Equipment</strong><div class="region">India · South (Coimbatore)</div></td>
+<td><span class="badge b-low">regional</span></td>
+<td>Coimbatore, Tamil Nadu</td>
+<td><a class="ext" href="https://www.revathi.in" target="_blank" rel="noopener">https://www.revathi.in</a></td>
+<td>South India crane/heavy equipment. Same industrial belt as Bengaluru.</td>
+<td><span class="badge b-low">Low</span></td>
+<td>Regional EOT/process.</td>
+</tr><tr class="" data-tier="regional" data-region="local" data-threat="high">
+<td><strong>Pegasus Technocrats</strong><div class="region">India · Bengaluru local</div></td>
+<td><span class="badge b-low">regional</span></td>
+<td>Peenya, Bengaluru</td>
+<td>Justdial / local</td>
+<td>19 yrs. Justdial 4.7/42. EOT from ~₹8.5L/unit. Same-city highly rated.</td>
+<td><span class="badge b-high">High threat</span></td>
+<td>Strongest direct local factory-order threat on Justdial.</td>
+</tr><tr class="" data-tier="similar-portfolio" data-region="local" data-threat="high">
+<td><strong>Associated Hoists &amp; Allied</strong><div class="region">India · Bengaluru local</div></td>
+<td><span class="badge b-low">similar-portfolio</span></td>
+<td>Bengaluru</td>
+<td><a class="ext" href="https://www.associatedhoists.com" target="_blank" rel="noopener">https://www.associatedhoists.com</a></td>
+<td>Since 2005. Hoists, EOT, jib, gantry — near-identical portfolio. Owned site, thin content.</td>
+<td><span class="badge b-high">High threat</span></td>
+<td>Beatable: no blog, guides, cases, downloads, pricing (verified 2026-07-05).</td>
+</tr><tr class="" data-tier="regional" data-region="local" data-threat="med-high">
+<td><strong>Kiran Engineering Works</strong><div class="region">India · Bengaluru local</div></td>
+<td><span class="badge b-low">regional</span></td>
+<td>Peenya 2nd Stage, Bengaluru</td>
+<td><a class="ext" href="https://www.kiranengineeringworks.in" target="_blank" rel="noopener">https://www.kiranengineeringworks.in</a></td>
+<td>33 yrs. Justdial 4.7/65. EOT + crab &amp; trolley units.</td>
+<td><span class="badge b-med">Med-High</span></td>
+<td>Same products, same city. Component overlap on crab units.</td>
+</tr><tr class="" data-tier="regional" data-region="local" data-threat="med-high">
+<td><strong>ABCO Engineers</strong><div class="region">India · Karnataka</div></td>
+<td><span class="badge b-low">regional</span></td>
+<td>Bengaluru &amp; Belgaum</td>
+<td><a class="ext" href="https://www.abcoengineers.com" target="_blank" rel="noopener">https://www.abcoengineers.com</a></td>
+<td>Near-identical portfolio: SG/DG EOT, underslung, monorail, jib, gantry. Multi-location KA.</td>
+<td><span class="badge b-med">Med-High</span></td>
+<td>State-wide Karnataka competitor.</td>
+</tr><tr class="" data-tier="regional" data-region="local" data-threat="med">
+<td><strong>Ace Engineering Technologies</strong><div class="region">India · Bengaluru local</div></td>
+<td><span class="badge b-low">regional</span></td>
+<td>Bengaluru 560099</td>
+<td><a class="ext" href="https://acetechnologies.co" target="_blank" rel="noopener">https://acetechnologies.co</a></td>
+<td>SG/DG EOT. DG up to 25t with magnet control.</td>
+<td><span class="badge b-med">Medium</span></td>
+<td>Local core EOT competitor.</td>
+</tr><tr class="" data-tier="regional" data-region="local" data-threat="med">
+<td><strong>Gayathri Engineering</strong><div class="region">India · Bengaluru / South</div></td>
+<td><span class="badge b-low">regional</span></td>
+<td>Bengaluru</td>
+<td><a class="ext" href="https://www.gayathriengineering.in" target="_blank" rel="noopener">https://www.gayathriengineering.in</a></td>
+<td>10T EOT quoted ₹15–35L. Bangalore + Coimbatore listings. Cost-focused SG designs.</td>
+<td><span class="badge b-med">Medium</span></td>
+<td>Same-city low-cost pull via IndiaMART/Justdial.</td>
+</tr><tr class="" data-tier="regional" data-region="local" data-threat="med-high">
+<td><strong>Gearcon Engineering</strong><div class="region">India · SEO into BLR</div></td>
+<td><span class="badge b-low">regional</span></td>
+<td>Chhattisgarh (markets Bangalore)</td>
+<td><a class="ext" href="https://www.gearconengg.com" target="_blank" rel="noopener">https://www.gearconengg.com</a></td>
+<td>Up to 80T. SEO-targets &#x27;Double Girder EOT Manufacturers in Bangalore&#x27; from out of state.</td>
+<td><span class="badge b-med">Med-High</span></td>
+<td>Competes for Bengaluru online leads SVMH needs.</td>
+</tr><tr class="" data-tier="regional" data-region="local" data-threat="med">
+<td><strong>Link Well Enterprises</strong><div class="region">India · Bengaluru local</div></td>
+<td><span class="badge b-low">regional</span></td>
+<td>Andrahalli, Bengaluru</td>
+<td>Justdial</td>
+<td>19 yrs. Justdial 4.9/13. Entry EOT ~₹2.5L. Price-sensitive local jobs.</td>
+<td><span class="badge b-med">Medium</span></td>
+<td>Listing-based; no strong independent site.</td>
+</tr><tr class="" data-tier="regional" data-region="local" data-threat="med">
+<td><strong>Saumya Engineering</strong><div class="region">India · Bengaluru local</div></td>
+<td><span class="badge b-low">regional</span></td>
+<td>Peenya, Bengaluru</td>
+<td>Justdial</td>
+<td>11 yrs. 4.9/32. Industrial shed + EOT repair/manufacture.</td>
+<td><span class="badge b-med">Medium</span></td>
+<td>Cranes + fabrication overlap same cluster.</td>
+</tr><tr class="" data-tier="regional" data-region="local" data-threat="med">
+<td><strong>Crane Fab India</strong><div class="region">India · Bengaluru local</div></td>
+<td><span class="badge b-low">regional</span></td>
+<td>Peenya 2nd Stage</td>
+<td>Justdial</td>
+<td>18 yrs. Manufacture + repair/AMC in Peenya.</td>
+<td><span class="badge b-med">Medium</span></td>
+<td>AMC/service line overlap.</td>
+</tr><tr class="" data-tier="regional" data-region="local" data-threat="med">
+<td><strong>Adrtek India</strong><div class="region">India · Bengaluru local</div></td>
+<td><span class="badge b-low">regional</span></td>
+<td>Jigani, Bengaluru</td>
+<td>Justdial</td>
+<td>EOT manufacturer/dealer. From ~₹3.3L. GST-verified. Jigani belt.</td>
+<td><span class="badge b-med">Medium</span></td>
+<td>Same industrial customers.</td>
+</tr><tr class="" data-tier="regional" data-region="local" data-threat="low">
+<td><strong>Bhavana Engineering</strong><div class="region">India · Bengaluru local</div></td>
+<td><span class="badge b-low">regional</span></td>
+<td>Thammenahalli, Bengaluru</td>
+<td>Justdial</td>
+<td>10 yrs. EOT manufacture + repair/AMC.</td>
+<td><span class="badge b-low">Low</span></td>
+<td>Small local player.</td>
+</tr><tr class="" data-tier="regional" data-region="india" data-threat="med">
+<td><strong>Pioneer Cranes &amp; Elevators</strong><div class="region">India · North (Ludhiana)</div></td>
+<td><span class="badge b-low">regional</span></td>
+<td>Ludhiana, Punjab</td>
+<td><a class="ext" href="https://www.pioneercranes.net" target="_blank" rel="noopener">https://www.pioneercranes.net</a></td>
+<td>Broad range SG/DG EOT, goliath, jib, hoists. Strong SEO/content. Top-10 listicles.</td>
+<td><span class="badge b-med">Medium</span></td>
+<td>Exact online channel SVMH is weak in.</td>
+</tr><tr class="" data-tier="regional" data-region="india" data-threat="med">
+<td><strong>Loadmate Industries</strong><div class="region">India · Maharashtra</div></td>
+<td><span class="badge b-low">regional</span></td>
+<td>Maharashtra</td>
+<td><a class="ext" href="https://loadmate.in" target="_blank" rel="noopener">https://loadmate.in</a></td>
+<td>SG/DG overhead, gantry, jib + hoists. Content marketing / top-10 listings.</td>
+<td><span class="badge b-med">Medium</span></td>
+<td>Modern branding domestic peer.</td>
+</tr><tr class="" data-tier="regional" data-region="india" data-threat="med">
+<td><strong>Reva Industries</strong><div class="region">India · North (Faridabad)</div></td>
+<td><span class="badge b-low">regional</span></td>
+<td>Faridabad, Haryana</td>
+<td><a class="ext" href="https://www.revacranes.com" target="_blank" rel="noopener">https://www.revacranes.com</a></td>
+<td>EOT + crane gearboxes. Mid-market domestic.</td>
+<td><span class="badge b-med">Medium</span></td>
+<td>Crane + gearbox overlap.</td>
+</tr><tr class="" data-tier="regional" data-region="india" data-threat="med">
+<td><strong>Cranetech Equipments</strong><div class="region">India</div></td>
+<td><span class="badge b-low">regional</span></td>
+<td>India</td>
+<td><a class="ext" href="https://www.cranetechequipments.com" target="_blank" rel="noopener">https://www.cranetechequipments.com</a></td>
+<td>SG/DG EOT, gantry, jib, hoists. Steel, auto, construction, power.</td>
+<td><span class="badge b-med">Medium</span></td>
+<td>Near-identical footprint, SME scale.</td>
+</tr><tr class="" data-tier="regional" data-region="india" data-threat="low">
+<td><strong>GRIP Engineers</strong><div class="region">India</div></td>
+<td><span class="badge b-low">regional</span></td>
+<td>India</td>
+<td><a class="ext" href="https://www.gripengineers.com" target="_blank" rel="noopener">https://www.gripengineers.com</a></td>
+<td>EOT robust proven-design positioning.</td>
+<td><span class="badge b-low">Low</span></td>
+<td>Standard EOT segment.</td>
+</tr><tr class="" data-tier="regional" data-region="india" data-threat="med">
+<td><strong>D.R. Engimech</strong><div class="region">India · Gujarat</div></td>
+<td><span class="badge b-low">regional</span></td>
+<td>Gujarat</td>
+<td><a class="ext" href="https://www.drengimech.com" target="_blank" rel="noopener">https://www.drengimech.com</a></td>
+<td>EOT, jib, gantry, semi-gantry, goods lifts. IndiaMART/price.</td>
+<td><span class="badge b-med">Medium</span></td>
+<td>Near-identical product mix.</td>
+</tr><tr class="" data-tier="regional" data-region="india" data-threat="low">
+<td><strong>Ganesh Engineering Co.</strong><div class="region">India · Gujarat</div></td>
+<td><span class="badge b-low">regional</span></td>
+<td>Gujarat</td>
+<td><a class="ext" href="https://www.ganeshcrane.in" target="_blank" rel="noopener">https://www.ganeshcrane.in</a></td>
+<td>Since 2004. Jib + EOT supplier Gujarat.</td>
+<td><span class="badge b-low">Low</span></td>
+<td>Regional/SME tier.</td>
+</tr><tr class="" data-tier="regional" data-region="india" data-threat="low">
+<td><strong>Stalmac Enterprise</strong><div class="region">India</div></td>
+<td><span class="badge b-low">regional</span></td>
+<td>India</td>
+<td><a class="ext" href="https://www.stalmacenterprise.com" target="_blank" rel="noopener">https://www.stalmacenterprise.com</a></td>
+<td>Overhead and gantry systems. &#x27;World-class&#x27; positioning.</td>
+<td><span class="badge b-low">Low</span></td>
+<td>Regional EOT/gantry.</td>
+</tr><tr class="" data-tier="regional" data-region="india" data-threat="low">
+<td><strong>Revamech</strong><div class="region">India</div></td>
+<td><span class="badge b-low">regional</span></td>
+<td>India</td>
+<td>IndiaMART / directories</td>
+<td>Named EOT/MHE maker (client-flagged). Thin independent web.</td>
+<td><span class="badge b-low">Low</span></td>
+<td>Directory-visible regional tier.</td>
+</tr><tr class="" data-tier="export-focused" data-region="india" data-threat="med">
+<td><strong>Safex Industries / Safex Engineers</strong><div class="region">India · Gujarat</div></td>
+<td><span class="badge b-low">export-focused</span></td>
+<td>Ahmedabad, Gujarat</td>
+<td><a class="ext" href="https://safex-cranes.com" target="_blank" rel="noopener">https://safex-cranes.com</a></td>
+<td>EOT, HOT (hot metal), jib. Export focus. Pioneer positioning in Indian MHE.</td>
+<td><span class="badge b-med">Medium</span></td>
+<td>Direct hot/ladle + export overlap.</td>
+</tr><tr class="" data-tier="export-focused" data-region="india" data-threat="low">
+<td><strong>Santek Equipments (KS Crane)</strong><div class="region">India</div></td>
+<td><span class="badge b-low">export-focused</span></td>
+<td>India</td>
+<td><a class="ext" href="https://www.kscranegroup.com" target="_blank" rel="noopener">https://www.kscranegroup.com</a></td>
+<td>Manufacturer AND exporter of EOT + MHE systems.</td>
+<td><span class="badge b-low">Low</span></td>
+<td>Export beyond IndiaMART channel.</td>
+</tr><tr class="" data-tier="similar-portfolio" data-region="india" data-threat="med">
+<td><strong>Mukand Ltd.</strong><div class="region">India · National</div></td>
+<td><span class="badge b-low">similar-portfolio</span></td>
+<td>Mumbai, Maharashtra</td>
+<td><a class="ext" href="https://www.mukand.com" target="_blank" rel="noopener">https://www.mukand.com</a></td>
+<td>Heavy engineering. EOT, gantry, port cranes. Large fabrication capacity.</td>
+<td><span class="badge b-med">Medium</span></td>
+<td>Overlaps double-girder/custom heavy work.</td>
+</tr><tr class="" data-tier="similar-portfolio" data-region="india" data-threat="low">
+<td><strong>Techno Industries</strong><div class="region">India · Gujarat</div></td>
+<td><span class="badge b-low">similar-portfolio</span></td>
+<td>Gujarat</td>
+<td>Slideshare / directories</td>
+<td>ISO 9001. 30+ yrs EOT + hoists. Thin public web — similar digital weakness.</td>
+<td><span class="badge b-low">Low</span></td>
+<td>Near-identical mid-size positioning to SVMH.</td>
+</tr><tr class="" data-tier="adjacent-industry" data-region="india" data-threat="svc">
+<td><strong>Cranedge (Gandhi Automations)</strong><div class="region">India · Service</div></td>
+<td><span class="badge b-low">adjacent-industry</span></td>
+<td>Pune, Maharashtra</td>
+<td><a class="ext" href="https://www.cranedge.com" target="_blank" rel="noopener">https://www.cranedge.com</a></td>
+<td>EOT maintenance, repair, modernization. Strong service SEO. ElectroMech-adjacent ecosystem.</td>
+<td><span class="badge b-high">Service threat</span></td>
+<td>Threatens SVMH AMC/spares revenue — &#x27;any make, anywhere&#x27;.</td>
+</tr><tr class="" data-tier="adjacent-industry" data-region="india" data-threat="ref">
+<td><strong>TIL Limited</strong><div class="region">India · Mobile cranes</div></td>
+<td><span class="badge b-low">adjacent-industry</span></td>
+<td>Kolkata, West Bengal</td>
+<td><a class="ext" href="https://www.tilindia.in" target="_blank" rel="noopener">https://www.tilindia.in</a></td>
+<td>80-yr legacy. Mobile/truck/rough-terrain, reachstackers. Built India&#x27;s first crane.</td>
+<td><span class="badge b-ref">Reference</span></td>
+<td>Adjacent lifting — brand/scale ref, not factory EOT.</td>
+</tr><tr class="" data-tier="adjacent-industry" data-region="india" data-threat="ref">
+<td><strong>ACE (Action Construction Equip.)</strong><div class="region">India · Construction cranes</div></td>
+<td><span class="badge b-low">adjacent-industry</span></td>
+<td>Faridabad, Haryana</td>
+<td><a class="ext" href="https://www.ace-cranes.com" target="_blank" rel="noopener">https://www.ace-cranes.com</a></td>
+<td>India #1 mobile pick-and-carry + tower. Listed. Premium digital presence.</td>
+<td><span class="badge b-ref">Reference</span></td>
+<td>Construction-crane segment, not EOT rival.</td>
+</tr><tr class="" data-tier="adjacent-industry" data-region="india" data-threat="ref">
+<td><strong>Godrej Material Handling</strong><div class="region">India · Forklifts/MHE</div></td>
+<td><span class="badge b-low">adjacent-industry</span></td>
+<td>Mumbai, Maharashtra</td>
+<td><a class="ext" href="https://www.godrejenterprises.com" target="_blank" rel="noopener">https://www.godrejenterprises.com</a></td>
+<td>Largest Indian forklift maker. Exports 40+ countries. Warehouse automation (ex-Koerber).</td>
+<td><span class="badge b-ref">Reference</span></td>
+<td>Adjacent MHE brand-scale reference.</td>
+</tr><tr class="" data-tier="adjacent-industry" data-region="local" data-threat="med">
+<td><strong>Astal Structures</strong><div class="region">India · Bengaluru PEB</div></td>
+<td><span class="badge b-low">adjacent-industry</span></td>
+<td>Bengaluru, Karnataka</td>
+<td><a class="ext" href="https://astal.in" target="_blank" rel="noopener">https://astal.in</a></td>
+<td>Leading BLR PEB manufacturer. Crane-ready industrial sheds.</td>
+<td><span class="badge b-med">Medium</span></td>
+<td>Same industrial-construction buyers; fabrication overlap.</td>
+</tr><tr class="" data-tier="adjacent-industry" data-region="local" data-threat="med">
+<td><strong>Mount Roofing and Structures</strong><div class="region">India · Bengaluru PEB</div></td>
+<td><span class="badge b-low">adjacent-industry</span></td>
+<td>Bengaluru, Karnataka</td>
+<td><a class="ext" href="https://mountroof.com" target="_blank" rel="noopener">https://mountroof.com</a></td>
+<td>Top BLR PEB/structural. Industrial, aerospace, logistics.</td>
+<td><span class="badge b-med">Medium</span></td>
+<td>Fabrication + crane structure bundling.</td>
+</tr><tr class="" data-tier="adjacent-industry" data-region="local" data-threat="low">
+<td><strong>Global Fabrication</strong><div class="region">India · Bengaluru PEB</div></td>
+<td><span class="badge b-low">adjacent-industry</span></td>
+<td>Bengaluru, Karnataka</td>
+<td><a class="ext" href="https://www.globalfabrications.in" target="_blank" rel="noopener">https://www.globalfabrications.in</a></td>
+<td>Structural steel + PEB contractor Bengaluru.</td>
+<td><span class="badge b-low">Low</span></td>
+<td>Fabrication service overlap.</td>
+</tr><tr class="sv" data-tier="self" data-region="local" data-threat="self">
+<td><strong>S.V. Material Handling (SVMH)</strong><div class="region">India · Bengaluru</div></td>
+<td><span class="badge b-low">self</span></td>
+<td>Harohalli KIADB, Bengaluru</td>
+<td><a class="ext" href="https://svind.co.in" target="_blank" rel="noopener">https://svind.co.in</a></td>
+<td>₹13.6 Cr. EOT SG/DG, gantry, jib, monorail, hot/ladle, spares, AMC. Family-owned since 2006.</td>
+<td><span class="badge b-ok">YOU</span></td>
+<td>SSL expired. No money-pages, catalogue, cases, LI, CRM. Digital baseline ~0.</td>
+</tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Sources: <code>01_Competitors/00_competitor_index.md</code> (71 entries) · profiles 01–14 · website audits 01–08 · Report 01 Competitor Database. Accessed 2026-07-05. Confidence High/Med/Low per source file.</p>
+  </div>
+</section>
+
+<section id="india">
+  <div class="wrap">
+    <div class="eyebrow">05 · India national &amp; South India</div>
+    <h2>Who sets the domestic bar</h2>
+    <p class="sub">ElectroMech is the digital ceiling. K2/Amsak are the regional SEO threat. Filter “India” above for every India row in the master table.</p>
+    <div class="grid2">
+      <div class="card">
+        <h3>Indian leaders (detail)</h3>
+        <ul>
+          <li><strong>ElectroMech</strong> — ~₹500–697 Cr · ABUS · 13 industries · ~25 cases · Cranedge AMC</li>
+          <li><strong>Anupam</strong> — 1973 · ladle/port/steel national · JSW Dolvi 550T</li>
+          <li><strong>WMI / Konecranes</strong> — steel process · 4,000+ installs · JSW ₹58 Cr order</li>
+          <li><strong>Bajaj Indef</strong> — hoist + crane brand since 1962</li>
+          <li><strong>Elecon</strong> — cranes + gearboxes</li>
+          <li><strong>Josts</strong> — legacy MHE + service</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>South India regionals</h3>
+        <ul>
+          <li><strong>K2 Cranes (Chennai)</strong> — HIGH · Karnataka/Bangalore SEO pages</li>
+          <li><strong>Amsak (Chennai)</strong> — HOT to 300T · scale</li>
+          <li><strong>Mega / Good Shepherd / Revathi (Coimbatore)</strong> — same belt</li>
+          <li>Exports: Middle East, Africa, Sri Lanka (K2)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="local">
+  <div class="wrap">
+    <div class="eyebrow">06 · Bengaluru &amp; Karnataka home turf</div>
+    <h2>Same-city &amp; in-state rivals</h2>
+    <p class="sub">These steal the ₹10–35L factory orders. Justdial stars + IndiaMART price. Digital content almost empty — winnable.</p>
+    <div class="grid3">
+      <div class="card">
+<div class="region">India · Bengaluru local</div>
+<h3>Pegasus Technocrats</h3>
+<div class="meta">Peenya, Bengaluru · <span class="badge b-high">High threat</span></div>
+<p>19 yrs. Justdial 4.7/42. EOT from ~₹8.5L/unit. Same-city highly rated.</p>
+<p style="margin-top:.5rem;font-size:.78rem">Strongest direct local factory-order threat on Justdial.</p>
+</div><div class="card">
+<div class="region">India · Bengaluru local</div>
+<h3>Associated Hoists &amp; Allied</h3>
+<div class="meta">Bengaluru · <span class="badge b-high">High threat</span></div>
+<p>Since 2005. Hoists, EOT, jib, gantry — near-identical portfolio. Owned site, thin content.</p>
+<p style="margin-top:.5rem;font-size:.78rem">Beatable: no blog, guides, cases, downloads, pricing (verified 2026-07-05).</p>
+</div><div class="card">
+<div class="region">India · Bengaluru local</div>
+<h3>Kiran Engineering Works</h3>
+<div class="meta">Peenya 2nd Stage, Bengaluru · <span class="badge b-med">Med-High</span></div>
+<p>33 yrs. Justdial 4.7/65. EOT + crab &amp; trolley units.</p>
+<p style="margin-top:.5rem;font-size:.78rem">Same products, same city. Component overlap on crab units.</p>
+</div><div class="card">
+<div class="region">India · Karnataka</div>
+<h3>ABCO Engineers</h3>
+<div class="meta">Bengaluru &amp; Belgaum · <span class="badge b-med">Med-High</span></div>
+<p>Near-identical portfolio: SG/DG EOT, underslung, monorail, jib, gantry. Multi-location KA.</p>
+<p style="margin-top:.5rem;font-size:.78rem">State-wide Karnataka competitor.</p>
+</div><div class="card">
+<div class="region">India · Bengaluru local</div>
+<h3>Ace Engineering Technologies</h3>
+<div class="meta">Bengaluru 560099 · <span class="badge b-med">Medium</span></div>
+<p>SG/DG EOT. DG up to 25t with magnet control.</p>
+<p style="margin-top:.5rem;font-size:.78rem">Local core EOT competitor.</p>
+</div><div class="card">
+<div class="region">India · Bengaluru / South</div>
+<h3>Gayathri Engineering</h3>
+<div class="meta">Bengaluru · <span class="badge b-med">Medium</span></div>
+<p>10T EOT quoted ₹15–35L. Bangalore + Coimbatore listings. Cost-focused SG designs.</p>
+<p style="margin-top:.5rem;font-size:.78rem">Same-city low-cost pull via IndiaMART/Justdial.</p>
+</div><div class="card">
+<div class="region">India · SEO into BLR</div>
+<h3>Gearcon Engineering</h3>
+<div class="meta">Chhattisgarh (markets Bangalore) · <span class="badge b-med">Med-High</span></div>
+<p>Up to 80T. SEO-targets &#x27;Double Girder EOT Manufacturers in Bangalore&#x27; from out of state.</p>
+<p style="margin-top:.5rem;font-size:.78rem">Competes for Bengaluru online leads SVMH needs.</p>
+</div><div class="card">
+<div class="region">India · Bengaluru local</div>
+<h3>Link Well Enterprises</h3>
+<div class="meta">Andrahalli, Bengaluru · <span class="badge b-med">Medium</span></div>
+<p>19 yrs. Justdial 4.9/13. Entry EOT ~₹2.5L. Price-sensitive local jobs.</p>
+<p style="margin-top:.5rem;font-size:.78rem">Listing-based; no strong independent site.</p>
+</div><div class="card">
+<div class="region">India · Bengaluru local</div>
+<h3>Saumya Engineering</h3>
+<div class="meta">Peenya, Bengaluru · <span class="badge b-med">Medium</span></div>
+<p>11 yrs. 4.9/32. Industrial shed + EOT repair/manufacture.</p>
+<p style="margin-top:.5rem;font-size:.78rem">Cranes + fabrication overlap same cluster.</p>
+</div><div class="card">
+<div class="region">India · Bengaluru local</div>
+<h3>Crane Fab India</h3>
+<div class="meta">Peenya 2nd Stage · <span class="badge b-med">Medium</span></div>
+<p>18 yrs. Manufacture + repair/AMC in Peenya.</p>
+<p style="margin-top:.5rem;font-size:.78rem">AMC/service line overlap.</p>
+</div><div class="card">
+<div class="region">India · Bengaluru local</div>
+<h3>Adrtek India</h3>
+<div class="meta">Jigani, Bengaluru · <span class="badge b-med">Medium</span></div>
+<p>EOT manufacturer/dealer. From ~₹3.3L. GST-verified. Jigani belt.</p>
+<p style="margin-top:.5rem;font-size:.78rem">Same industrial customers.</p>
+</div><div class="card">
+<div class="region">India · Bengaluru local</div>
+<h3>Bhavana Engineering</h3>
+<div class="meta">Thammenahalli, Bengaluru · <span class="badge b-low">Low</span></div>
+<p>10 yrs. EOT manufacture + repair/AMC.</p>
+<p style="margin-top:.5rem;font-size:.78rem">Small local player.</p>
+</div><div class="card">
+<div class="region">India · Bengaluru PEB</div>
+<h3>Astal Structures</h3>
+<div class="meta">Bengaluru, Karnataka · <span class="badge b-med">Medium</span></div>
+<p>Leading BLR PEB manufacturer. Crane-ready industrial sheds.</p>
+<p style="margin-top:.5rem;font-size:.78rem">Same industrial-construction buyers; fabrication overlap.</p>
+</div><div class="card">
+<div class="region">India · Bengaluru PEB</div>
+<h3>Mount Roofing and Structures</h3>
+<div class="meta">Bengaluru, Karnataka · <span class="badge b-med">Medium</span></div>
+<p>Top BLR PEB/structural. Industrial, aerospace, logistics.</p>
+<p style="margin-top:.5rem;font-size:.78rem">Fabrication + crane structure bundling.</p>
+</div><div class="card">
+<div class="region">India · Bengaluru PEB</div>
+<h3>Global Fabrication</h3>
+<div class="meta">Bengaluru, Karnataka · <span class="badge b-low">Low</span></div>
+<p>Structural steel + PEB contractor Bengaluru.</p>
+<p style="margin-top:.5rem;font-size:.78rem">Fabrication service overlap.</p>
+</div><div class="card">
+<div class="region">India · Bengaluru</div>
+<h3>S.V. Material Handling (SVMH)</h3>
+<div class="meta">Harohalli KIADB, Bengaluru · <span class="badge b-ok">YOU</span></div>
+<p>₹13.6 Cr. EOT SG/DG, gantry, jib, monorail, hot/ladle, spares, AMC. Family-owned since 2006.</p>
+<p style="margin-top:.5rem;font-size:.78rem">SSL expired. No money-pages, catalogue, cases, LI, CRM. Digital baseline ~0.</p>
+</div>
+    </div>
+  </div>
+</section>
+
+<section id="threats">
+  <div class="wrap">
+    <div class="eyebrow">07 · Threat-ranked summary</div>
+    <h2>Who hurts SVMH first</h2>
+    <div class="tbl-wrap">
+      <table style="min-width:700px">
+        <thead><tr><th>Rank</th><th>Company</th><th>Why it hurts</th><th>Counter (protocol)</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td><strong>K2 Cranes</strong></td><td>SEO into Karnataka/Bangalore from Chennai</td><td>P1 GBP + city pages + real factory proof</td></tr>
+          <tr><td>2</td><td><strong>ElectroMech</strong></td><td>Sets digital expectations; Cranedge AMC</td><td>Don't out-scale — out-local + price transparent</td></tr>
+          <tr><td>3</td><td><strong>Pegasus Technocrats</strong></td><td>Same city Justdial strength</td><td>LI + GBP reviews + site RFQ</td></tr>
+          <tr><td>4</td><td><strong>Associated Hoists</strong></td><td>Identical portfolio, same city</td><td>Beat thin content with catalogue/cases/price</td></tr>
+          <tr><td>5</td><td><strong>Amsak / Kiran / ABCO / Gearcon</strong></td><td>South KA field + SEO</td><td>Home-turf content + service SLA</td></tr>
+          <tr><td>6</td><td><strong>Cranedge</strong></td><td>AMC "any make" service SEO</td><td>Productise AMC + local service pages</td></tr>
+          <tr><td>7</td><td><strong>Weihua / Eurocrane / Nucleon</strong></td><td>China SEO + export price on aggregators</td><td>Own site + standards + TCO narrative</td></tr>
+          <tr><td>—</td><td><strong>Konecranes / Demag / ABUS / GH / Street / CM / Kito</strong></td><td>Benchmark only</td><td>Copy structure · exploit RFQ/price/India gaps</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note" style="margin-top:1.5rem"><a href="index.html"><strong>→ Operating Protocol</strong></a> for LinkedIn-first phases · brand · leads · CRM · website scope.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot">
+    <div><strong>SVMH Full Competitor Intelligence</strong><br/>Corpus: 01_Competitors · 02_Website_Audits · 16_Reports/01 · Jul 2026</div>
+    <div><a href="index.html">Protocol</a> · <a href="competitors.html">This page</a></div>
+  </div>
+</footer>
+
+<script>
+const progress=document.getElementById('progress'),nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>{const h=document.documentElement;const s=h.scrollTop;const t=h.scrollHeight-h.clientHeight;progress.style.width=t>0?(s/t*100)+'%':'0%';nav.classList.toggle('scrolled',s>40);},{passive:true});
+
+const tabs=document.querySelectorAll('#filters .tab');
+const trs=document.querySelectorAll('#master-table tbody tr');
+tabs.forEach(tab=>tab.addEventListener('click',()=>{
+  tabs.forEach(t=>t.classList.remove('on'));tab.classList.add('on');
+  const f=tab.dataset.f;
+  trs.forEach(tr=>{
+    let show=true;
+    if(f==='all') show=true;
+    else if(f==='intl') show=tr.dataset.region==='intl';
+    else if(f==='india') show=tr.dataset.region==='india'||tr.dataset.region==='local'||tr.dataset.threat==='self';
+    else if(f==='local') show=tr.dataset.region==='local';
+    else if(f==='high') show=['high','med-high','svc'].includes(tr.dataset.threat);
+    else show=tr.dataset.tier===f;
+    tr.classList.toggle('filter-hide',!show);
+  });
+}));
+</script>
+</body>
+</html>

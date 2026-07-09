@@ -1,0 +1,15 @@
+.DS_Store
+**/.DS_Store
+.grok/
+research/.grok/
+**/*.pen
+research/designs/
+*.xlsx
+Website Research and Replication Strategy.docx
+website/images/
+website/.kiro/
+website/pasted-image*.pdf
+website/sv.pen
+website/images/**/*
+research/assets/
+research/*.html
