@@ -216,6 +216,18 @@
   --gutter: clamp(20px, 4vw, 40px);
   --band-pad-x: clamp(20px, 7vw, 93px);   /* DNA inner band padding */
 
+  /* Bands are full-bleed, so the reading width is capped inside them. This
+     is the inline padding that keeps content on the --max-content measure:
+     --band-pad-x until the viewport passes --max-content + 2 * --band-pad-x,
+     then it grows to absorb the surplus so the content block stays centred
+     and text never stretches on an ultrawide display. Below that threshold
+     the calc() term goes negative, and max() is what floors the padding at
+     --band-pad-x instead of letting it collapse. */
+  --band-inset: max(
+    var(--band-pad-x),
+    calc((100% - var(--max-content)) / 2)
+  );
+
   /* ---------------------------------------------------------------------
      LAYOUT
      --------------------------------------------------------------------- */

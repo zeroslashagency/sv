@@ -14,15 +14,20 @@
 
 /* --------------------------------------------------------------------------
    0. PAGE SHELL
-   White page, gray bands inset by an 8px gutter. This is the frame the
-   reference boards use: the gray never touches the viewport edge on desktop.
+   The shell spans the viewport and never caps itself. Bands are full-bleed:
+   the color change runs edge to edge, per 07_DNA_RM_TEREX.md §"Section
+   separation" ("full-bleed color change between bands"). The white surface
+   shows only as the 8px horizontal seam between consecutive bands.
+
+   Reading width is capped INSIDE each band (see --band-inset below), not on
+   this element. Capping the shell is what produced the ~98px-per-side dead
+   gutter at 1435px and 340px at 1920px: max-width plus `margin-inline: auto`
+   meant a band could never reach the edge. Never reintroduce a max-width
+   here; 04_TEST/static/test_layout.py fails if it comes back.
    -------------------------------------------------------------------------- */
 
 .page {
   width: 100%;
-  max-width: var(--max-content);
-  margin-inline: auto;
-  padding-inline: var(--gutter-split);
   background-color: var(--color-surface);
 }
 
@@ -38,7 +43,9 @@
   position: relative;
   overflow: hidden;
   background-color: var(--color-canvas);
-  padding: clamp(48px, 6vw, 66px) var(--band-pad-x) clamp(48px, 6vw, 72px);
+  /* Inline padding is --band-inset, not --band-pad-x: the fill runs edge to
+     edge while the content inside it stays on the --max-content measure. */
+  padding: clamp(48px, 6vw, 66px) var(--band-inset) clamp(48px, 6vw, 72px);
 }
 
 /* A band that carries the S3 frame must reserve room for it: the frame is
@@ -79,7 +86,9 @@
 .dna-frame {
   position: absolute;
   inset-block-start: clamp(24px, 4vw, 66px);
-  inset-inline: var(--band-pad-x);
+  /* Tracks the band's own inline padding so the label and counter stay
+     flush with the content column, not with the full-bleed edge. */
+  inset-inline: var(--band-inset);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -158,11 +167,13 @@
   color: var(--color-navy-deep);
 }
 
-/* Knockout parked behind the stage content, bled off the left edge. */
+/* Knockout parked behind the stage content, bled off the left edge. Offset
+   from --band-inset so it keeps its relationship to the content column
+   rather than drifting away from it as the viewport widens. */
 .dna-knockout--stage {
   position: absolute;
   inset-block-start: clamp(72px, 11vw, 118px);
-  inset-inline-start: calc(var(--band-pad-x) - clamp(12px, 3vw, 30px));
+  inset-inline-start: calc(var(--band-inset) - clamp(12px, 3vw, 30px));
 }
 
 /* --------------------------------------------------------------------------
@@ -880,9 +891,9 @@
    -------------------------------------------------------------------------- */
 
 @media (max-width: 640px) {
-  .page {
-    padding-inline: 0;
-  }
+  /* The shell carries no inline padding at any width now, so there is
+     nothing to zero out here. Bands keep their own --band-inset, which
+     bottoms out at 20px on a narrow screen. */
 
   /* The S3 frame is absolutely positioned, so narrow bands need enough top
      padding for the label/counter row to clear the first heading. */
