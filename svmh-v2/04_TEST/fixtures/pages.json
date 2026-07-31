@@ -1,0 +1,87 @@
+{
+  "eot-cranes/double-girder.html": {
+    "bands": 14,
+    "counter_steps": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13
+    ],
+    "counter_total": "13",
+    "frames": 13,
+    "h1_count": 1,
+    "navy_bands": 1,
+    "navy_panels": 1,
+    "title": "Double-girder EOT crane up to 100 T \u2014 manufacturer in Bengaluru | SVMH"
+  },
+  "index.html": {
+    "bands": 9,
+    "counter_steps": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "counter_total": "07",
+    "frames": 7,
+    "h1_count": 1,
+    "navy_bands": 1,
+    "navy_panels": 1,
+    "title": "EOT Crane Manufacturer in Bengaluru \u2014 SVMH | S.V. Material Handling System"
+  },
+  "locations/bangalore.html": {
+    "bands": 15,
+    "counter_steps": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14
+    ],
+    "counter_total": "14",
+    "frames": 14,
+    "h1_count": 1,
+    "navy_bands": 1,
+    "navy_panels": 1,
+    "title": "EOT Crane Manufacturers in Bangalore \u2014 SVMH, Harohalli KIADB"
+  },
+  "request-a-quote.html": {
+    "bands": 8,
+    "counter_steps": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "counter_total": "07",
+    "frames": 7,
+    "h1_count": 1,
+    "navy_bands": 1,
+    "navy_panels": 1,
+    "title": "Request a quote \u2014 EOT &amp; gantry cranes \u00b7 SVMH Bengaluru"
+  }
+}

@@ -1,0 +1,4 @@
+Greybox HTML wireframes, one per template. Empty: the DNA design language was
+settled directly against the reference boards in 01_DESIGN/refboards/ and built
+in 03_BUILD, so this stage was skipped for the four seeded pages.
+Populate before building a new template.

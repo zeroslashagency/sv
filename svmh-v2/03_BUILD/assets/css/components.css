@@ -1,0 +1,1955 @@
+/* ==========================================================================
+   SVMH v2 — components.css
+   Depends on tokens.css + base.css. Load third.
+   Governing aesthetic: 01_DESIGN/06_DESIGN_RECALIBRATION.md (clean minimal).
+   Rules honoured throughout:
+     • copper ≤ 3 appearances per viewport   • hairlines only, no shadows
+     • radii ≤ 4px, no gradients on UI       • never #FFFFFF
+     • mobile-first, min-width queries only  • hover ≤ 160ms and subtle
+   Every block is preceded by a comment naming its purpose.
+   Full class + ARIA contract: ./COMPONENT_CONTRACT.md
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   PROGRESS BAR
+   .progress-bar — 2px copper scroll hairline pinned to the top of the
+   viewport. Width driven by JS (--progress-scale, 0–1). Decorative:
+   aria-hidden in markup. This is copper appearance #1 and it is 2px tall.
+   -------------------------------------------------------------------------- */
+
+.progress-bar {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline: 0;
+  z-index: var(--z-progress);
+  height: 2px;
+  background-color: transparent;
+  pointer-events: none;
+}
+
+.progress-bar__fill {
+  height: 100%;
+  width: 100%;
+  background-color: var(--color-copper);
+  transform: scaleX(var(--progress-scale, 0));
+  transform-origin: 0 50%;
+  will-change: transform;
+}
+
+/* --------------------------------------------------------------------------
+   NAV — hairline-celled sticky header
+   .nav is a full-width bar split into cells by 1px hairlines. Logo cell
+   left, link cells centre, right-most cell solid copper holding the quote
+   CTA. Sticky; collapses on scroll via .is-scrolled.
+   -------------------------------------------------------------------------- */
+
+.nav {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: var(--z-nav);
+  background-color: var(--color-concrete);
+  border-block-end: 1px solid var(--color-hairline);
+  transition: background-color var(--dur-fast) var(--ease-out),
+              border-color var(--dur-fast) var(--ease-out);
+}
+
+/* Inner rail: holds the cells, full-bleed hairlines at the outer edges */
+.nav__inner {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 0;
+  min-height: var(--nav-h);
+  transition: min-height var(--dur-fast) var(--ease-out);
+}
+
+/* Brand cell — wordmark + one-line descriptor */
+.nav__brand {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  padding-inline-end: var(--space-5);
+  text-decoration: none;
+}
+
+.nav__brand:hover {
+  color: var(--color-text);
+}
+
+.nav__wordmark {
+  font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  font-weight: var(--weight-semibold);
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+  color: var(--color-text);
+}
+
+.nav__descriptor {
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  line-height: var(--lh-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  color: var(--color-text-muted);
+}
+
+/* Link cell group — hidden below 1024px, replaced by the overlay */
+.nav__menu {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .nav__menu {
+    display: flex;
+    align-items: stretch;
+    margin-inline-start: auto;
+  }
+}
+
+/* One nav cell. Hairline on the leading edge is what builds the grid. */
+.nav__link {
+  display: flex;
+  align-items: center;
+  padding-inline: var(--space-5);
+  border-inline-start: 1px solid var(--color-hairline);
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  transition: color var(--dur-fast) var(--ease-out),
+              background-color var(--dur-fast) var(--ease-out);
+}
+
+.nav__link:hover {
+  color: var(--color-text);
+  background-color: var(--color-concrete-2);
+}
+
+/* Current page: ink text + 2px ink underline. Not copper — the accent
+   budget belongs to the CTA cell. */
+.nav__link[aria-current="page"] {
+  color: var(--color-text);
+  box-shadow: inset 0 -2px 0 0 var(--color-ink);
+}
+
+/* Copper CTA cell — the right-most cell. Copper appearance #2. */
+.nav__cta {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .nav__cta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding-inline: var(--space-6);
+    border-inline-start: 1px solid var(--color-hairline);
+    background-color: var(--color-copper);
+    color: var(--color-text-on-accent);
+    font-size: var(--text-micro-caps);
+    font-weight: var(--weight-micro-caps);
+    letter-spacing: var(--tracking-micro-caps);
+    text-transform: var(--case-micro-caps);
+    white-space: nowrap;
+    transition: background-color var(--dur-fast) var(--ease-out);
+  }
+
+  .nav__cta:hover {
+    background-color: var(--color-copper-hover);
+    color: var(--color-text-on-accent);
+  }
+}
+
+/* Scrolled state — collapse height, switch field to white, tighten line */
+.nav.is-scrolled {
+  background-color: var(--color-white);
+  border-block-end-color: var(--color-hairline-2);
+}
+
+.nav.is-scrolled .nav__inner {
+  min-height: var(--nav-h-scrolled);
+}
+
+.nav.is-scrolled .nav__descriptor {
+  display: none;
+}
+
+/* Hamburger — three 1px rules, becomes an X while the overlay is open */
+.nav__toggle {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 48px;
+  min-height: 48px;
+  padding-inline: var(--space-4);
+  border-inline-start: 1px solid var(--color-hairline);
+  margin-inline-start: auto;
+}
+
+@media (min-width: 1024px) {
+  .nav__toggle {
+    display: none;
+  }
+}
+
+.nav__toggle-bar {
+  display: block;
+  width: 20px;
+  height: 1px;
+  background-color: var(--color-text);
+  transition: transform var(--dur-fast) var(--ease-out),
+              opacity var(--dur-fast) var(--ease-out);
+}
+
+.nav__toggle[aria-expanded="true"] .nav__toggle-bar:nth-child(1) {
+  transform: translateY(6px) rotate(45deg);
+}
+
+.nav__toggle[aria-expanded="true"] .nav__toggle-bar:nth-child(2) {
+  opacity: 0;
+}
+
+.nav__toggle[aria-expanded="true"] .nav__toggle-bar:nth-child(3) {
+  transform: translateY(-6px) rotate(-45deg);
+}
+
+/* Full-screen mobile menu. Hidden from AT and pointer until .is-open. */
+.nav__overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-overlay);
+  display: flex;
+  flex-direction: column;
+  padding: calc(var(--nav-h) + var(--space-6)) var(--gutter) var(--space-8);
+  background-color: var(--color-ink);
+  color: var(--color-text-on-dark);
+  overflow-y: auto;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition: opacity var(--dur-base) var(--ease-out),
+              transform var(--dur-base) var(--ease-out),
+              visibility var(--dur-base) var(--ease-out);
+}
+
+.nav__overlay.is-open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+@media (min-width: 1024px) {
+  .nav__overlay {
+    display: none;
+  }
+}
+
+/* Overlay link list — display-m scale, hairline between rows */
+.nav__overlay-list {
+  display: flex;
+  flex-direction: column;
+  border-block-start: 1px solid var(--color-hairline-dark);
+}
+
+.nav__overlay-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding-block: var(--space-5);
+  border-block-end: 1px solid var(--color-hairline-dark);
+  font-size: var(--text-display-m);
+  font-weight: var(--weight-display-m);
+  letter-spacing: var(--tracking-display-m);
+  color: var(--color-text-on-dark);
+}
+
+.nav__overlay-link[aria-current="page"] {
+  color: var(--color-copper);
+}
+
+/* Overlay footer — phone + email in mono, metadata in micro-caps */
+.nav__overlay-foot {
+  margin-block-start: auto;
+  padding-block-start: var(--space-7);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--text-spec-mono);
+  letter-spacing: var(--tracking-spec-mono);
+  color: var(--color-text-on-dark-muted);
+}
+
+/* --------------------------------------------------------------------------
+   MOBILE BAR
+   .mobile-bar — fixed bottom Call / WhatsApp / Quote bar. Below 768px only.
+   Three equal cells divided by hairlines; the Quote cell is copper.
+   -------------------------------------------------------------------------- */
+
+.mobile-bar {
+  display: none;
+}
+
+@media (max-width: 767.98px) {
+  .mobile-bar {
+    position: fixed;
+    inset-block-end: 0;
+    inset-inline: 0;
+    z-index: var(--z-mobile-bar);
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    min-height: var(--mobile-bar-h);
+    background-color: var(--color-white);
+    border-block-start: 1px solid var(--color-hairline-2);
+    padding-block-end: env(safe-area-inset-bottom, 0px);
+  }
+}
+
+.mobile-bar__item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--mobile-bar-h);
+  border-inline-start: 1px solid var(--color-hairline);
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  color: var(--color-text);
+}
+
+.mobile-bar__item:first-child {
+  border-inline-start: 0;
+}
+
+.mobile-bar__item svg {
+  width: 14px;
+  height: 14px;
+  flex: none;
+}
+
+/* The single accent cell in the bar */
+.mobile-bar__item--accent {
+  background-color: var(--color-copper);
+  color: var(--color-text-on-accent);
+  border-inline-start-color: var(--color-copper);
+}
+
+.mobile-bar__item--accent:hover {
+  color: var(--color-text-on-accent);
+}
+
+/* --------------------------------------------------------------------------
+   HERO
+   .hero — first screen. Eyebrow → H1 → lead → spec row → actions, with an
+   optional media column on the 7/5 split. NO ghost watermark: decorative
+   type is revoked by the recalibration.
+   -------------------------------------------------------------------------- */
+
+.hero {
+  position: relative;
+  padding-block: clamp(56px, 9vw, 120px) clamp(48px, 7vw, 96px);
+  background-color: var(--color-concrete);
+}
+
+/* Hero on the one dark band of the page */
+.hero--ink {
+  background-color: var(--color-ink);
+  color: var(--color-text-on-dark);
+}
+
+.hero__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-7);
+  align-items: center;
+}
+
+@media (min-width: 1024px) {
+  .hero__grid {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: clamp(32px, 5vw, 96px);
+  }
+}
+
+.hero__body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-5);
+}
+
+/* micro-caps kicker above the H1 — category, location, or niche */
+.hero__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  line-height: var(--lh-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  color: var(--color-text-muted);
+}
+
+/* 1px rule that separates eyebrow segments */
+.hero__eyebrow::after {
+  content: "";
+  width: clamp(24px, 5vw, 64px);
+  height: 1px;
+  background-color: var(--color-hairline-2);
+}
+
+.hero--ink .hero__eyebrow {
+  color: var(--color-text-on-dark-muted);
+}
+
+.hero--ink .hero__eyebrow::after {
+  background-color: var(--color-hairline-dark);
+}
+
+/* The single H1. Sentence case, weight 600, display-xxl. */
+.hero__title {
+  font-family: var(--font-display);
+  font-size: var(--text-display-xxl);
+  font-weight: var(--weight-display-xxl);
+  line-height: var(--lh-display-xxl);
+  letter-spacing: var(--tracking-display-xxl);
+  text-transform: var(--case-display-xxl);
+  max-width: 20ch;
+  text-wrap: balance;
+}
+
+/* Optional single copper word inside the H1 — counts against the budget */
+.hero__title em {
+  font-style: normal;
+  color: var(--color-copper);
+}
+
+.hero__lead {
+  font-size: var(--text-lead);
+  font-weight: var(--weight-lead);
+  line-height: var(--lh-lead);
+  color: var(--color-text-secondary);
+  max-width: 52ch;
+}
+
+.hero--ink .hero__lead {
+  color: var(--color-text-on-dark-muted);
+}
+
+/* Engineering readout under the lead: capacity · span · duty, mono, in a
+   hairline-topped row. This is the ornament — data as decoration. */
+.hero__specs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4) var(--space-6);
+  width: 100%;
+  margin-block-start: var(--space-2);
+  padding-block-start: var(--space-5);
+  border-block-start: 1px solid var(--color-hairline);
+}
+
+.hero--ink .hero__specs {
+  border-block-start-color: var(--color-hairline-dark);
+}
+
+.hero__spec {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.hero__spec-label {
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  color: var(--color-text-muted);
+}
+
+.hero__spec-value {
+  font-family: var(--font-mono);
+  font-size: var(--text-spec-mono);
+  font-weight: var(--weight-spec-mono);
+  line-height: var(--lh-spec-mono);
+  letter-spacing: var(--tracking-spec-mono);
+  font-feature-settings: "zero" 1, "tnum" 1;
+  color: var(--color-text);
+}
+
+.hero--ink .hero__spec-value {
+  color: var(--color-text-on-dark);
+}
+
+/* One primary + one secondary. Never two primaries. */
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+  margin-block-start: var(--space-2);
+}
+
+/* Media column. Plain image, generous margin, 4px radius max, no overlay
+   unless text sits on top (.hero__media--overlay). */
+.hero__media {
+  position: relative;
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background-color: var(--color-concrete-2);
+}
+
+.hero__media img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+.hero__media--overlay::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--overlay-image);
+  pointer-events: none;
+}
+
+/* Caption strip pinned under the media — alt-grade spec text */
+.hero__media-caption {
+  position: relative;
+  z-index: 1;
+  display: block;
+  padding: var(--space-3) var(--space-4);
+  border-block-start: 1px solid var(--color-hairline);
+  background-color: var(--color-white);
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  color: var(--color-text-muted);
+}
+
+/* --------------------------------------------------------------------------
+   TRUST STRIP
+   .trust-strip — credentials above the first fold break. Hairline-bordered
+   on concrete (not the old solid ink slab). micro-caps labels with mono
+   values, one cell per credential, hairline dividers.
+   -------------------------------------------------------------------------- */
+
+.trust-strip {
+  background-color: var(--color-concrete);
+  border-block: 1px solid var(--color-hairline);
+}
+
+.trust-strip__list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+@media (min-width: 768px) {
+  .trust-strip__list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .trust-strip__list {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+
+/* One credential cell. Hairlines are drawn on two edges then trimmed. */
+.trust-strip__item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-5) var(--space-4);
+  border-inline-start: 1px solid var(--color-hairline);
+  border-block-start: 1px solid var(--color-hairline);
+}
+
+.trust-strip__item:nth-child(-n + 2) {
+  border-block-start: 0;
+}
+
+.trust-strip__item:nth-child(odd) {
+  border-inline-start: 0;
+  padding-inline-start: 0;
+}
+
+@media (min-width: 768px) {
+  .trust-strip__item {
+    border-block-start: 1px solid var(--color-hairline);
+    border-inline-start: 1px solid var(--color-hairline);
+    padding-inline-start: var(--space-4);
+  }
+
+  .trust-strip__item:nth-child(-n + 3) {
+    border-block-start: 0;
+  }
+
+  .trust-strip__item:nth-child(3n + 1) {
+    border-inline-start: 0;
+    padding-inline-start: 0;
+  }
+}
+
+@media (min-width: 1024px) {
+  .trust-strip__item,
+  .trust-strip__item:nth-child(-n + 3) {
+    border-block-start: 0;
+  }
+
+  .trust-strip__item:nth-child(3n + 1) {
+    border-inline-start: 1px solid var(--color-hairline);
+    padding-inline-start: var(--space-4);
+  }
+
+  .trust-strip__item:first-child {
+    border-inline-start: 0;
+    padding-inline-start: 0;
+  }
+}
+
+.trust-strip__label {
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  line-height: var(--lh-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  color: var(--color-text-muted);
+}
+
+.trust-strip__value {
+  font-family: var(--font-mono);
+  font-size: var(--text-spec-mono);
+  font-weight: var(--weight-spec-mono);
+  line-height: var(--lh-spec-mono);
+  letter-spacing: var(--tracking-spec-mono);
+  font-feature-settings: "zero" 1, "tnum" 1;
+  color: var(--color-text);
+}
+
+/* Certified / verified marker. Signal green, never decorative. */
+.trust-strip__value--verified {
+  color: var(--color-safe);
+}
+
+/* --------------------------------------------------------------------------
+   BUTTONS
+   .btn — base: small, flat, micro-caps, 2px radius. Deliberately quiet
+   against the headline. Variants: --primary (copper), --ghost (copper-wire
+   1px border), --dark (ink).
+   -------------------------------------------------------------------------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  padding: 14px 26px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-sans);
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  line-height: 1;
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  text-align: center;
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease-out),
+              border-color var(--dur-fast) var(--ease-out),
+              color var(--dur-fast) var(--ease-out),
+              transform var(--dur-fast) var(--ease-out);
+}
+
+/* Trailing glyph (↗) sits inside the button as its own span */
+.btn__glyph {
+  display: inline-block;
+  font-size: 1em;
+  line-height: 1;
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+
+.btn:hover .btn__glyph {
+  transform: translate(1px, -1px);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn[disabled],
+.btn[aria-disabled="true"] {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+/* Solid copper. One per viewport — this is the accent budget's main line. */
+.btn--primary {
+  background-color: var(--color-copper);
+  color: var(--color-text-on-accent);
+  border-color: var(--color-copper);
+}
+
+.btn--primary:hover {
+  background-color: var(--color-copper-hover);
+  border-color: var(--color-copper-hover);
+  color: var(--color-text-on-accent);
+}
+
+/* 1px copper-wire border, transparent field. Secondary action. */
+.btn--ghost {
+  background-color: transparent;
+  border-color: var(--color-copper-wire);
+  color: var(--color-text);
+}
+
+.btn--ghost:hover {
+  border-color: var(--color-copper);
+  color: var(--color-copper);
+}
+
+.band--ink .btn--ghost,
+.hero--ink .btn--ghost,
+.nav__overlay .btn--ghost,
+.footer .btn--ghost {
+  color: var(--color-text-on-dark);
+}
+
+/* Solid ink. Used where copper would exceed the per-viewport budget. */
+.btn--dark {
+  background-color: var(--color-ink);
+  color: var(--color-text-on-dark);
+  border-color: var(--color-ink);
+}
+
+.btn--dark:hover {
+  background-color: var(--color-ink-2);
+  border-color: var(--color-ink-2);
+  color: var(--color-text-on-dark);
+}
+
+.band--ink .btn--dark,
+.hero--ink .btn--dark {
+  background-color: var(--color-white);
+  border-color: var(--color-white);
+  color: var(--color-text);
+}
+
+.band--ink .btn--dark:hover,
+.hero--ink .btn--dark:hover {
+  background-color: var(--color-concrete);
+  border-color: var(--color-concrete);
+  color: var(--color-text);
+}
+
+/* Text-only tertiary: micro-caps with an ink underline that goes copper */
+.btn--link {
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-block-end: 1px solid var(--color-hairline-2);
+  border-radius: 0;
+  color: var(--color-text);
+}
+
+.btn--link:hover {
+  border-block-end-color: var(--color-copper);
+  color: var(--color-copper);
+}
+
+.btn--block {
+  width: 100%;
+}
+
+/* --------------------------------------------------------------------------
+   CARD
+   .card — white surface on concrete, 1px hairline, 4px radius.
+   .card--product adds the numbered index, media slot and pinned spec foot.
+   Hover is ONLY: border → hairline-2, title → copper, 1px lift, 160ms.
+   No colour flood anywhere.
+   -------------------------------------------------------------------------- */
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  background-color: var(--color-white);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-md);
+  transition: border-color var(--dur-fast) var(--ease-out),
+              transform var(--dur-fast) var(--ease-out);
+}
+
+@media (min-width: 768px) {
+  .card {
+    padding: var(--space-6);
+  }
+}
+
+.card:hover,
+.card:focus-within {
+  border-color: var(--color-hairline-2);
+  transform: translateY(-1px);
+}
+
+.card__index {
+  font-family: var(--font-mono);
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  font-feature-settings: "zero" 1, "tnum" 1;
+  color: var(--color-text-muted);
+}
+
+.card__title {
+  font-family: var(--font-display);
+  font-size: var(--text-display-m);
+  font-weight: var(--weight-display-m);
+  line-height: var(--lh-display-m);
+  letter-spacing: var(--tracking-display-m);
+  color: var(--color-text);
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.card:hover .card__title,
+.card:focus-within .card__title {
+  color: var(--color-copper);
+}
+
+.card__text {
+  font-size: var(--text-body-s);
+  line-height: var(--lh-body-s);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+/* Media slot. Contained — no frame-breaking cut-outs by default. */
+.card__media {
+  order: -1;
+  margin: calc(var(--space-5) * -1) calc(var(--space-5) * -1) 0;
+  border-block-end: 1px solid var(--color-hairline);
+  background-color: var(--color-concrete-2);
+  overflow: hidden;
+  border-start-start-radius: var(--radius-md);
+  border-start-end-radius: var(--radius-md);
+}
+
+@media (min-width: 768px) {
+  .card__media {
+    margin: calc(var(--space-6) * -1) calc(var(--space-6) * -1) 0;
+  }
+}
+
+.card__media img {
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+}
+
+/* Bottom-pinned foot: hairline above, spec row or ghost CTA inside */
+.card__foot {
+  margin-block-start: auto;
+  padding-block-start: var(--space-4);
+  border-block-start: 1px solid var(--color-hairline);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.card__spec {
+  font-family: var(--font-mono);
+  font-size: var(--text-spec-mono);
+  font-weight: var(--weight-spec-mono);
+  line-height: var(--lh-spec-mono);
+  letter-spacing: var(--tracking-spec-mono);
+  font-feature-settings: "zero" 1, "tnum" 1;
+  color: var(--color-text-secondary);
+}
+
+/* Stretched link makes the whole card clickable without nesting anchors */
+.card__link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-md);
+}
+
+.card--product {
+  min-height: 100%;
+}
+
+/* Cards on the dark band */
+.band--ink .card {
+  background-color: var(--color-ink-2);
+  border-color: var(--color-ink-3);
+}
+
+.band--ink .card:hover,
+.band--ink .card:focus-within {
+  border-color: var(--color-hairline-dark);
+}
+
+.band--ink .card__title {
+  color: var(--color-text-on-dark);
+}
+
+.band--ink .card__text,
+.band--ink .card__spec {
+  color: var(--color-text-on-dark-muted);
+}
+
+/* --------------------------------------------------------------------------
+   INDEX ROW
+   .index-row — numbered accordion. Replaces icon bullets entirely.
+   mono numeral | display-m label | +/− expander, 1px hairline between rows.
+   Button carries aria-expanded + aria-controls; panel is the controlled id.
+   -------------------------------------------------------------------------- */
+
+.index-list {
+  border-block-start: 1px solid var(--color-hairline);
+}
+
+.index-row {
+  border-block-end: 1px solid var(--color-hairline);
+}
+
+.band--ink .index-list,
+.band--ink .index-row {
+  border-color: var(--color-hairline-dark);
+}
+
+/* The clickable header row */
+.index-row__trigger {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-4);
+  width: 100%;
+  padding-block: var(--space-5);
+  text-align: left;
+  color: var(--color-text);
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+@media (min-width: 768px) {
+  .index-row__trigger {
+    gap: var(--space-6);
+    padding-block: var(--space-6);
+  }
+}
+
+.index-row__trigger:hover {
+  color: var(--color-copper);
+}
+
+.band--ink .index-row__trigger {
+  color: var(--color-text-on-dark);
+}
+
+/* 01 / 02 / 03 — thin mono numeral, slashed zero */
+.index-row__num {
+  font-family: var(--font-mono);
+  font-size: var(--text-index-numeral);
+  font-weight: var(--weight-index-numeral);
+  line-height: var(--lh-index-numeral);
+  letter-spacing: var(--tracking-index-numeral);
+  font-feature-settings: "zero" 1, "tnum" 1;
+  color: var(--color-text-muted);
+  min-width: 2.5em;
+}
+
+.index-row__label {
+  font-family: var(--font-display);
+  font-size: var(--text-display-m);
+  font-weight: var(--weight-display-m);
+  line-height: var(--lh-display-m);
+  letter-spacing: var(--tracking-display-m);
+  text-wrap: balance;
+}
+
+/* +/− expander built from two 1px rules; the vertical one collapses on open */
+.index-row__icon {
+  position: relative;
+  flex: none;
+  width: 20px;
+  height: 20px;
+}
+
+.index-row__icon::before,
+.index-row__icon::after {
+  content: "";
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 0;
+  width: 100%;
+  height: 1px;
+  background-color: currentColor;
+  transition: transform var(--dur-fast) var(--ease-out),
+              opacity var(--dur-fast) var(--ease-out);
+}
+
+.index-row__icon::after {
+  transform: rotate(90deg);
+}
+
+.index-row__trigger[aria-expanded="true"] {
+  color: var(--color-copper);
+}
+
+.index-row__trigger[aria-expanded="true"] .index-row__icon::after {
+  transform: rotate(0deg);
+  opacity: 0;
+}
+
+.index-row__trigger[aria-expanded="true"] .index-row__num {
+  color: var(--color-copper);
+}
+
+/* Panel. Closed state uses [hidden] in markup; open state gets the padding. */
+.index-row__panel {
+  padding-block-end: var(--space-6);
+  padding-inline-start: 0;
+}
+
+@media (min-width: 768px) {
+  .index-row__panel {
+    /* Optically align the panel copy with the label column */
+    padding-inline-start: calc(2.5em + var(--space-6));
+  }
+}
+
+.index-row__panel > * + * {
+  margin-block-start: var(--space-4);
+}
+
+.index-row__panel p {
+  font-size: var(--text-body);
+  line-height: var(--lh-body);
+  color: var(--color-text-secondary);
+  max-width: var(--max-text);
+}
+
+.band--ink .index-row__panel p {
+  color: var(--color-text-on-dark-muted);
+}
+
+/* --------------------------------------------------------------------------
+   STAT
+   .stat — proof-point lockup: thin numeral + micro-caps caption stacked
+   below it, on a plain hairline grid. No outline strokes, no photo overlay.
+   -------------------------------------------------------------------------- */
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-block-start: var(--space-4);
+  border-block-start: 1px solid var(--color-hairline);
+}
+
+.band--ink .stat {
+  border-block-start-color: var(--color-hairline-dark);
+}
+
+.stat__value {
+  font-family: var(--font-mono);
+  font-size: var(--text-stat);
+  font-weight: var(--weight-stat);
+  line-height: var(--lh-stat);
+  letter-spacing: var(--tracking-stat);
+  font-feature-settings: "zero" 1, "tnum" 1;
+  color: var(--color-text);
+}
+
+.band--ink .stat__value {
+  color: var(--color-text-on-dark);
+}
+
+/* Unit suffix rides smaller alongside the numeral */
+.stat__unit {
+  font-size: 0.42em;
+  font-weight: var(--weight-regular);
+  letter-spacing: 0.04em;
+  margin-inline-start: 0.2em;
+  color: var(--color-text-muted);
+}
+
+.stat__caption {
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  line-height: var(--lh-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  color: var(--color-text-muted);
+  max-width: 22ch;
+}
+
+.band--ink .stat__caption {
+  color: var(--color-text-on-dark-muted);
+}
+
+/* One stat per row of the grid may be highlighted — use at most once */
+.stat--accent .stat__value {
+  color: var(--color-copper);
+}
+
+/* Stat row: hairline grid, 2-up on mobile, 4-up from lg */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-6) var(--grid-gap);
+}
+
+@media (min-width: 1024px) {
+  .stat-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* --------------------------------------------------------------------------
+   SPEC TABLE
+   .spec-table — hairline grid, mono values, dotted-leader alignment between
+   label and value, horizontal scroll with a shadow affordance on mobile.
+   Requires <caption>, scope on every header cell.
+   -------------------------------------------------------------------------- */
+
+/* Scroll shell. The right-edge fade is the only permitted UI gradient and
+   it is an affordance, not decoration. */
+.spec-table-wrap {
+  position: relative;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-md);
+  background-color: var(--color-white);
+}
+
+.spec-table-wrap::after {
+  content: "";
+  position: sticky;
+  inset-inline-end: 0;
+  top: 0;
+  float: right;
+  width: 24px;
+  height: 100%;
+  box-shadow: inset -14px 0 12px -12px rgba(14, 20, 24, 0.22);
+  pointer-events: none;
+}
+
+@media (min-width: 768px) {
+  .spec-table-wrap::after {
+    display: none;
+  }
+}
+
+.spec-table {
+  width: 100%;
+  min-width: 560px;
+  border-collapse: collapse;
+  font-size: var(--text-body-s);
+}
+
+.spec-table caption {
+  padding: var(--space-4) var(--space-5);
+  text-align: left;
+  border-block-end: 1px solid var(--color-hairline);
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  color: var(--color-text-muted);
+}
+
+.spec-table th,
+.spec-table td {
+  padding: var(--space-3) var(--space-4);
+  border-block-end: 1px solid var(--color-hairline);
+  border-inline-start: 1px solid var(--color-hairline);
+  vertical-align: baseline;
+  text-align: left;
+}
+
+.spec-table th:first-child,
+.spec-table td:first-child {
+  border-inline-start: 0;
+}
+
+.spec-table tr:last-child td {
+  border-block-end: 0;
+}
+
+.spec-table thead th {
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+/* Row-header cells stay sentence case and sit in body weight */
+.spec-table tbody th[scope="row"] {
+  font-size: var(--text-body-s);
+  font-weight: var(--weight-medium);
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--color-text);
+}
+
+.spec-table td {
+  font-family: var(--font-mono);
+  font-size: var(--text-spec-mono);
+  line-height: var(--lh-spec-mono);
+  letter-spacing: var(--tracking-spec-mono);
+  font-feature-settings: "zero" 1, "tnum" 1;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+.spec-table tbody tr:nth-child(even) {
+  background-color: var(--color-concrete);
+}
+
+/* Two-column label/value variant with a dotted leader between the pair.
+   Markup: <tr><th scope="row"><span>Label</span></th><td>Value</td></tr>
+   inside .spec-table--leader. */
+.spec-table--leader {
+  min-width: 0;
+}
+
+.spec-table--leader tbody tr {
+  background-color: transparent;
+}
+
+.spec-table--leader tbody th[scope="row"] {
+  width: 100%;
+  border-inline-start: 0;
+  position: relative;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* The leader itself: repeating dots filling the gap to the value column */
+.spec-table--leader tbody th[scope="row"]::after {
+  content: "";
+  position: absolute;
+  inset-block-end: 0.42em;
+  inset-inline-start: 0;
+  width: 100%;
+  height: 1px;
+  margin-inline-start: 0.5em;
+  background-image: radial-gradient(circle, var(--color-hairline-2) 1px, transparent 1px);
+  background-size: 5px 1px;
+  background-repeat: repeat-x;
+  z-index: 0;
+}
+
+.spec-table--leader tbody th[scope="row"] > span {
+  position: relative;
+  z-index: 1;
+  padding-inline-end: var(--space-2);
+  background-color: var(--color-white);
+}
+
+.spec-table--leader tbody td {
+  border-inline-start: 0;
+  text-align: right;
+  color: var(--color-text);
+}
+
+/* Footnote under a table — tolerances, standards, revision */
+.spec-table__note {
+  margin-block-start: var(--space-3);
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  color: var(--color-text-muted);
+}
+
+/* --------------------------------------------------------------------------
+   COMPARE TABLE
+   .compare-table — 3 columns: pain / common solution / SVMH solution.
+   The SVMH column carries the copper-soft wash and a copper top rule.
+   Requires <caption> and scope="col" on all three headers.
+   -------------------------------------------------------------------------- */
+
+.compare-table-wrap {
+  position: relative;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-md);
+  background-color: var(--color-white);
+}
+
+.compare-table {
+  width: 100%;
+  min-width: 720px;
+  border-collapse: collapse;
+  font-size: var(--text-body-s);
+}
+
+.compare-table caption {
+  padding: var(--space-4) var(--space-5);
+  text-align: left;
+  border-block-end: 1px solid var(--color-hairline);
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  color: var(--color-text-muted);
+}
+
+.compare-table th,
+.compare-table td {
+  padding: var(--space-4) var(--space-5);
+  border-block-end: 1px solid var(--color-hairline);
+  border-inline-start: 1px solid var(--color-hairline);
+  text-align: left;
+  vertical-align: top;
+}
+
+.compare-table th:first-child,
+.compare-table td:first-child {
+  border-inline-start: 0;
+}
+
+.compare-table thead th {
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.compare-table tbody th[scope="row"] {
+  font-size: var(--text-body-s);
+  font-weight: var(--weight-medium);
+  color: var(--color-text);
+  width: 30%;
+}
+
+.compare-table td {
+  color: var(--color-text-secondary);
+}
+
+.compare-table tr:last-child th,
+.compare-table tr:last-child td {
+  border-block-end: 0;
+}
+
+/* The SVMH column. Wash + copper header text + 2px copper top rule. */
+.compare-table__svmh {
+  background-color: var(--color-copper-soft);
+  color: var(--color-text);
+}
+
+.compare-table thead .compare-table__svmh {
+  color: var(--color-copper);
+  box-shadow: inset 0 2px 0 0 var(--color-copper);
+}
+
+/* Engineering value inside a comparison cell */
+.compare-table__spec {
+  display: block;
+  margin-block-start: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-spec-mono);
+  letter-spacing: var(--tracking-spec-mono);
+  font-feature-settings: "zero" 1, "tnum" 1;
+  color: var(--color-text);
+}
+
+/* --------------------------------------------------------------------------
+   CHIPS
+   .chips — process pill chips with chevron separators. Wraps to as many
+   rows as needed. Ordered list in markup; separators are CSS-generated and
+   therefore decorative only.
+   -------------------------------------------------------------------------- */
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.chips__item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+/* The pill. 999px radius is permitted here: a pill is not a UI surface
+   panel, and the token set's dark-pill precedent covers it. */
+.chips__label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 8px 14px;
+  border: 1px solid var(--color-hairline-2);
+  border-radius: 999px;
+  background-color: var(--color-white);
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  line-height: var(--lh-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  color: var(--color-text);
+  white-space: nowrap;
+}
+
+/* Chevron separator between steps, suppressed after the last chip */
+.chips__item::after {
+  content: "\203A\203A";
+  font-size: var(--text-micro-caps);
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+}
+
+.chips__item:last-child::after {
+  content: none;
+}
+
+/* Mono step counter inside a chip */
+.chips__num {
+  font-family: var(--font-mono);
+  font-weight: var(--weight-regular);
+  font-feature-settings: "zero" 1, "tnum" 1;
+  color: var(--color-text-muted);
+}
+
+/* Current process step — at most one per viewport */
+.chips__item--active .chips__label {
+  border-color: var(--color-copper-wire);
+  color: var(--color-copper);
+}
+
+.chips__item--active .chips__num {
+  color: var(--color-copper);
+}
+
+.band--ink .chips__label {
+  background-color: var(--color-ink-2);
+  border-color: var(--color-ink-3);
+  color: var(--color-text-on-dark);
+}
+
+.band--ink .chips__item::after,
+.band--ink .chips__num {
+  color: var(--color-text-on-dark-muted);
+}
+
+/* --------------------------------------------------------------------------
+   FORM
+   .form — RFQ. Label-less underline inputs: the <label> is visually the
+   placeholder-position caption and floats to micro-caps on focus/fill.
+   Stepped progress 01 — 04. Error + required states included.
+   -------------------------------------------------------------------------- */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+/* Progress readout: 01 — 04 in mono plus a 1px track */
+.form__step {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  font-family: var(--font-mono);
+  font-size: var(--text-spec-mono);
+  letter-spacing: var(--tracking-spec-mono);
+  font-feature-settings: "zero" 1, "tnum" 1;
+  color: var(--color-text-muted);
+}
+
+.form__step-track {
+  position: relative;
+  flex: 1;
+  height: 1px;
+  background-color: var(--color-hairline-2);
+}
+
+.form__step-track::before {
+  content: "";
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  height: 1px;
+  width: var(--step-progress, 25%);
+  background-color: var(--color-copper);
+  transition: width var(--dur-base) var(--ease-out);
+}
+
+.form__step-current {
+  color: var(--color-text);
+}
+
+/* Fieldset group with a micro-caps legend */
+.form__group {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.form__legend {
+  padding: 0;
+  margin-block-end: var(--space-2);
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  color: var(--color-text-muted);
+}
+
+/* Two-up field row from md */
+.form__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-6);
+}
+
+@media (min-width: 768px) {
+  .form__row--2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* One field. position:relative anchors the floating label. */
+.form__field {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* The label sits on the input line and floats up on focus or fill.
+   It is a real <label for>, never a placeholder attribute. */
+.form__label {
+  position: absolute;
+  inset-block-start: 18px;
+  inset-inline-start: 0;
+  font-size: var(--text-body);
+  color: var(--color-text-muted);
+  pointer-events: none;
+  transform-origin: 0 0;
+  transition: transform var(--dur-fast) var(--ease-out),
+              color var(--dur-fast) var(--ease-out);
+}
+
+.form__input,
+.form__select,
+.form__textarea {
+  width: 100%;
+  padding: 18px 0 10px;
+  background-color: transparent;
+  border: 0;
+  border-block-end: 1px solid var(--color-hairline-2);
+  border-radius: 0;
+  font-size: var(--text-body);
+  color: var(--color-text);
+  transition: border-color var(--dur-fast) var(--ease-out);
+}
+
+.form__textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.form__select {
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--color-text-secondary) 50%),
+                    linear-gradient(135deg, var(--color-text-secondary) 50%, transparent 50%);
+  background-position: right 8px center, right 3px center;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+  padding-inline-end: var(--space-6);
+}
+
+.form__input:focus,
+.form__select:focus,
+.form__textarea:focus {
+  outline: none;
+  border-block-end-color: var(--color-copper);
+}
+
+.form__input:focus-visible,
+.form__select:focus-visible,
+.form__textarea:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* Float the label: on focus, or when the control holds a value.
+   :placeholder-shown requires a placeholder=" " on text inputs. */
+.form__input:focus + .form__label,
+.form__input:not(:placeholder-shown) + .form__label,
+.form__textarea:focus + .form__label,
+.form__textarea:not(:placeholder-shown) + .form__label,
+.form__select:focus + .form__label,
+.form__select[data-filled="true"] + .form__label {
+  transform: translateY(-18px) scale(0.6875);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  color: var(--color-text-muted);
+}
+
+/* Required marker — a dot, not an asterisk soup */
+.form__label .form__required {
+  color: var(--color-copper);
+  margin-inline-start: 2px;
+}
+
+/* Helper text under a field */
+.form__hint {
+  margin-block-start: var(--space-2);
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  color: var(--color-text-muted);
+}
+
+/* Error state. Driven by aria-invalid on the control; the message element
+   is referenced by aria-describedby and lives in a role="alert". */
+.form__input[aria-invalid="true"],
+.form__select[aria-invalid="true"],
+.form__textarea[aria-invalid="true"] {
+  border-block-end-color: var(--color-alert);
+}
+
+.form__error {
+  margin-block-start: var(--space-2);
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  color: var(--color-alert);
+}
+
+.form__field--error .form__label {
+  color: var(--color-alert);
+}
+
+/* Checkbox / radio row — square 16px control, 2px radius */
+.form__check {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  font-size: var(--text-body-s);
+  color: var(--color-text-secondary);
+}
+
+.form__check input[type="checkbox"],
+.form__check input[type="radio"] {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin-block-start: 3px;
+  accent-color: var(--color-copper);
+}
+
+/* Actions row: submit + a mono reassurance line */
+.form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+  padding-block-start: var(--space-4);
+  border-block-start: 1px solid var(--color-hairline);
+}
+
+.form__note {
+  font-family: var(--font-mono);
+  font-size: var(--text-spec-mono);
+  letter-spacing: var(--tracking-spec-mono);
+  color: var(--color-text-muted);
+}
+
+/* Submission feedback, role="status" in markup */
+.form__status {
+  padding: var(--space-4) var(--space-5);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-white);
+  font-size: var(--text-body-s);
+  color: var(--color-text-secondary);
+}
+
+.form__status--ok {
+  border-inline-start: 2px solid var(--color-safe);
+}
+
+.form__status--error {
+  border-inline-start: 2px solid var(--color-alert);
+}
+
+/* Honeypot — off-screen, never focusable by design */
+.form__trap {
+  position: absolute;
+  inset-inline-start: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* Form on the dark band */
+.band--ink .form__input,
+.band--ink .form__select,
+.band--ink .form__textarea {
+  border-block-end-color: var(--color-hairline-dark);
+  color: var(--color-text-on-dark);
+}
+
+.band--ink .form__label,
+.band--ink .form__hint,
+.band--ink .form__note,
+.band--ink .form__legend {
+  color: var(--color-text-on-dark-muted);
+}
+
+.band--ink .form__actions {
+  border-block-start-color: var(--color-hairline-dark);
+}
+
+/* --------------------------------------------------------------------------
+   TEXT-LEVEL UTILITIES
+   .eyebrow — micro-caps kicker for any band or block.
+   .spec     — mono engineering readout, inline.
+   -------------------------------------------------------------------------- */
+
+.eyebrow {
+  display: block;
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  line-height: var(--lh-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  color: var(--color-text-muted);
+}
+
+/* Rule-prefixed variant for band heads */
+.eyebrow--rule {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.eyebrow--rule::before {
+  content: "";
+  width: 24px;
+  height: 1px;
+  background-color: var(--color-hairline-2);
+  flex: none;
+}
+
+.band--ink .eyebrow {
+  color: var(--color-text-on-dark-muted);
+}
+
+.band--ink .eyebrow--rule::before {
+  background-color: var(--color-hairline-dark);
+}
+
+.spec {
+  font-family: var(--font-mono);
+  font-size: var(--text-spec-mono);
+  font-weight: var(--weight-spec-mono);
+  line-height: var(--lh-spec-mono);
+  letter-spacing: var(--tracking-spec-mono);
+  font-feature-settings: "zero" 1, "tnum" 1;
+  color: var(--color-text-secondary);
+}
+
+.band--ink .spec {
+  color: var(--color-text-on-dark-muted);
+}
+
+/* Hairline-boxed spec pill, for a single highlighted readout */
+.spec--boxed {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 6px 10px;
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+}
+
+/* --------------------------------------------------------------------------
+   REVEAL
+   .reveal — IntersectionObserver entrance: opacity 0→1, translateY 20px→0,
+   640ms --ease-out. JS adds .is-visible. Final state kept under
+   prefers-reduced-motion (see base.css §13).
+   -------------------------------------------------------------------------- */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity var(--dur-reveal) var(--ease-out),
+              transform var(--dur-reveal) var(--ease-out);
+  will-change: opacity, transform;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Staggered children, 80ms apart, six steps max */
+.reveal--stagger.is-visible > *:nth-child(1) { transition-delay: 0ms; }
+.reveal--stagger.is-visible > *:nth-child(2) { transition-delay: 80ms; }
+.reveal--stagger.is-visible > *:nth-child(3) { transition-delay: 160ms; }
+.reveal--stagger.is-visible > *:nth-child(4) { transition-delay: 240ms; }
+.reveal--stagger.is-visible > *:nth-child(5) { transition-delay: 320ms; }
+.reveal--stagger.is-visible > *:nth-child(6) { transition-delay: 400ms; }
+
+/* --------------------------------------------------------------------------
+   FOOTER
+   .footer — ink band: 4 columns (brand + 3 link groups) over a legal bar.
+   This is the second and last colour band on any page.
+   -------------------------------------------------------------------------- */
+
+.footer {
+  background-color: var(--color-ink);
+  color: var(--color-text-on-dark);
+  padding-block-start: var(--band-y-tight);
+}
+
+.footer__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-7);
+  padding-block-end: var(--space-8);
+}
+
+@media (min-width: 640px) {
+  .footer__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .footer__grid {
+    grid-template-columns: minmax(0, 1.4fr) repeat(3, minmax(0, 1fr));
+    gap: var(--grid-gap);
+  }
+}
+
+.footer__col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.footer__heading {
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  line-height: var(--lh-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  color: var(--color-text-on-dark-muted);
+}
+
+.footer__brand {
+  font-size: var(--text-display-m);
+  font-weight: var(--weight-display-m);
+  letter-spacing: var(--tracking-display-m);
+  color: var(--color-text-on-dark);
+}
+
+.footer__blurb {
+  font-size: var(--text-body-s);
+  line-height: var(--lh-body-s);
+  color: var(--color-text-on-dark-muted);
+  max-width: 40ch;
+}
+
+.footer__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.footer__link {
+  font-size: var(--text-body-s);
+  color: var(--color-text-on-dark-muted);
+}
+
+.footer__link:hover {
+  color: var(--color-text-on-dark);
+}
+
+/* Address / phone / GST block in mono */
+.footer__address {
+  font-family: var(--font-mono);
+  font-size: var(--text-spec-mono);
+  font-style: normal;
+  line-height: 1.7;
+  letter-spacing: var(--tracking-spec-mono);
+  font-feature-settings: "zero" 1, "tnum" 1;
+  color: var(--color-text-on-dark-muted);
+}
+
+/* Legal bar — hairline above, micro-caps both sides */
+.footer__legal {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding-block: var(--space-5);
+  border-block-start: 1px solid var(--color-hairline-dark);
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  color: var(--color-text-on-dark-muted);
+}
+
+.footer__legal-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-5);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+@media (max-width: 767.98px) {
+  /* Clear the fixed mobile bar */
+  .footer__legal {
+    padding-block-end: var(--space-6);
+  }
+}

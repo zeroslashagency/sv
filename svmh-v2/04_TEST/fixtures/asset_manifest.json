@@ -1,0 +1,77 @@
+{
+  "assets/img/bands/band-fabrication-bay-eot.jpg": {
+    "category": "bands",
+    "height": 800,
+    "width": 1600
+  },
+  "assets/img/bands/band-goliath-lifting-load.jpg": {
+    "category": "bands",
+    "height": 800,
+    "width": 1600
+  },
+  "assets/img/bands/hero-goliath-lifting-load.jpg": {
+    "category": "bands",
+    "height": 960,
+    "width": 1440
+  },
+  "assets/img/cards/crated-dispatch-2.jpg": {
+    "category": "cards",
+    "height": 720,
+    "width": 960
+  },
+  "assets/img/cards/crated-dispatch.jpg": {
+    "category": "cards",
+    "height": 720,
+    "width": 960
+  },
+  "assets/img/cards/eot-single-girder-bay.jpg": {
+    "category": "cards",
+    "height": 720,
+    "width": 960
+  },
+  "assets/img/cards/fabricated-chute-assembly.jpg": {
+    "category": "cards",
+    "height": 720,
+    "width": 960
+  },
+  "assets/img/cards/fabrication-bay-eot.jpg": {
+    "category": "cards",
+    "height": 720,
+    "width": 960
+  },
+  "assets/img/cards/gearbox-primed.jpg": {
+    "category": "cards",
+    "height": 720,
+    "width": 960
+  },
+  "assets/img/cards/ladle-carrier-frame.jpg": {
+    "category": "cards",
+    "height": 720,
+    "width": 960
+  },
+  "assets/img/cards/shop-enclosure-under-eot.jpg": {
+    "category": "cards",
+    "height": 720,
+    "width": 960
+  },
+  "assets/img/cards/structural-steel-bay.jpg": {
+    "category": "cards",
+    "height": 720,
+    "width": 960
+  },
+  "assets/img/cutouts/cutout-crab-unit.png": {
+    "category": "cutouts",
+    "height": 841,
+    "width": 1135
+  },
+  "assets/img/cutouts/cutout-goliath-gantry.png": {
+    "category": "cutouts",
+    "height": 429,
+    "width": 511
+  },
+  "assets/img/people/md-umapathi-portrait.jpg": {
+    "category": "people",
+    "height": 900,
+    "width": 720
+  }
+}

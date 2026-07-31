@@ -1,0 +1,155 @@
+{
+  "project": "SVMH v2 Premium Website Build",
+  "created": "2026-07-28T04:42:47.305Z",
+  "orchestrator": "grok-build-main-session",
+  "tasks": [
+    {
+      "id": "T001",
+      "title": "Design System Refinement & Component Architecture",
+      "assigned_to": "design-architect",
+      "agent_model": "local-claude-opus-5",
+      "priority": "P0",
+      "status": "done",
+      "dependencies": [],
+      "artifacts_path": ".agents/artifacts/design-architect/",
+      "completed_at": "2026-07-28T05:03:14Z",
+      "duration_minutes": 19,
+      "deliverables_count": 13,
+      "comments": [
+        "2026-07-28T04:44:16Z | Started architecture work",
+        "2026-07-28T05:03:14Z | Completed: 13 files, 1,834 lines delivered"
+      ]
+    },
+    {
+      "id": "T002",
+      "title": "Homepage & Product Overview Implementation",
+      "assigned_to": "page-builder-alpha",
+      "agent_model": "local-gpt-5-6-sol",
+      "priority": "P0",
+      "status": "assigned",
+      "dependencies": ["T001"],
+      "artifacts_path": ".agents/artifacts/page-builder-alpha/",
+      "acceptance_criteria": [
+        "index.html complete with hero, features, products sections",
+        "Product overview pages for EOT cranes and gantry systems",
+        "Large knockout typography implemented",
+        "Product card grids match reference aesthetic",
+        "Responsive 360px-1920px",
+        "Clean minimal industrial editorial style maintained"
+      ],
+      "estimated_duration": "90-120 minutes",
+      "created_at": "2026-07-28T04:42:47.305Z",
+      "updated_at": "2026-07-28T05:03:30Z",
+      "comments": []
+    },
+    {
+      "id": "T003",
+      "title": "Product Detail Pages & Forms Implementation",
+      "assigned_to": "page-builder-beta",
+      "agent_model": "local-gpt-5-6-sol",
+      "priority": "P0",
+      "status": "assigned",
+      "dependencies": ["T001"],
+      "artifacts_path": ".agents/artifacts/page-builder-beta/",
+      "acceptance_criteria": [
+        "Product detail pages complete (3+ products)",
+        "Request-a-quote form refined with better UX",
+        "Location pages (Bangalore, etc.) complete",
+        "Numbered accordions work correctly",
+        "Data tables styled and responsive",
+        "Form validation working"
+      ],
+      "estimated_duration": "90-120 minutes",
+      "created_at": "2026-07-28T04:42:47.305Z",
+      "updated_at": "2026-07-28T05:03:30Z",
+      "comments": []
+    },
+    {
+      "id": "T004",
+      "title": "Component Library Enhancement & JavaScript Refinement",
+      "assigned_to": "component-specialist",
+      "agent_model": "local-claude-opus-5",
+      "priority": "P1",
+      "status": "inbox",
+      "dependencies": ["T002", "T003"],
+      "artifacts_path": ".agents/artifacts/component-specialist/",
+      "estimated_duration": "60-90 minutes",
+      "created_at": "2026-07-28T04:42:47.305Z",
+      "updated_at": "2026-07-28T05:03:30Z",
+      "comments": []
+    },
+    {
+      "id": "T005",
+      "title": "Quality Assurance & Accessibility Audit",
+      "assigned_to": "qa-reviewer",
+      "agent_model": "local-claude-opus-5",
+      "priority": "P0",
+      "status": "inbox",
+      "dependencies": ["T004"],
+      "artifacts_path": ".agents/artifacts/qa-reviewer/",
+      "estimated_duration": "45-60 minutes",
+      "created_at": "2026-07-28T04:42:47.305Z",
+      "updated_at": "2026-07-28T05:03:30Z",
+      "comments": []
+    },
+    {
+      "id": "T006",
+      "title": "Revision & Final Integration",
+      "assigned_to": "orchestrator",
+      "agent_model": "grok-4.5",
+      "priority": "P0",
+      "status": "inbox",
+      "dependencies": ["T005"],
+      "artifacts_path": "svmh-v2/03_BUILD/",
+      "estimated_duration": "30-45 minutes",
+      "created_at": "2026-07-28T04:42:47.305Z",
+      "updated_at": "2026-07-28T05:03:30Z",
+      "comments": []
+    }
+  ],
+  "status_counts": {
+    "inbox": 3,
+    "assigned": 2,
+    "in_progress": 0,
+    "review": 0,
+    "done": 1,
+    "needs_revision": 0
+  },
+  "team_agents": [
+    {
+      "id": "design-architect",
+      "role": "Design Architect",
+      "model": "local-claude-opus-5",
+      "status": "completed_T001",
+      "current_task": null
+    },
+    {
+      "id": "page-builder-alpha",
+      "role": "Page Builder Alpha",
+      "model": "local-gpt-5-6-sol",
+      "status": "ready_to_launch",
+      "current_task": "T002"
+    },
+    {
+      "id": "page-builder-beta",
+      "role": "Page Builder Beta",
+      "model": "local-gpt-5-6-sol",
+      "status": "ready_to_launch",
+      "current_task": "T003"
+    },
+    {
+      "id": "component-specialist",
+      "role": "Component Specialist",
+      "model": "local-claude-opus-5",
+      "status": "idle",
+      "current_task": null
+    },
+    {
+      "id": "qa-reviewer",
+      "role": "QA Reviewer",
+      "model": "local-claude-opus-5",
+      "status": "idle",
+      "current_task": null
+    }
+  ]
+}
