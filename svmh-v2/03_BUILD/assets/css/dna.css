@@ -252,6 +252,11 @@
   min-width: 260px;
 }
 
+/* Hero cutout image transform - visual refinement */
+.dna-cutout--stage img[alt="Goliath gantry crane built by SVMH, single-girder portal on rail-mounted legs"] {
+  transform: translate(-72px, 0px) scale(1.2) rotate(-3deg);
+}
+
 /* --------------------------------------------------------------------------
    5. S4 — THREE-UP NUMBERED PANEL ROW
    4px gutters, 6px navy square bullet, ~64px knockout numeral,
