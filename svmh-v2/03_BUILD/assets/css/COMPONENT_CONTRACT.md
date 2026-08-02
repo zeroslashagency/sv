@@ -1,4 +1,4 @@
-# Component Contract — SVMH v2
+# Component Contract — SVIND v2
 
 Authoritative HTML contract for `tokens.css`, `base.css`, `components.css`. Page builders write markup against **this document** and must not need to read the CSS.
 
@@ -16,7 +16,7 @@ Cascade order is not optional.
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Unique per page — SVMH</title>
+  <title>Unique per page — SVIND</title>
   <meta name="description" content="Unique per page. Never omitted.">
   <link rel="stylesheet" href="assets/css/tokens.css">
   <link rel="stylesheet" href="assets/css/base.css">
@@ -53,7 +53,7 @@ All 118 are defined on `:root`. Use `var(--token)`; never hard-code a value.
 | `--color-steel` | `#1B3A4B` | Technical/spec panel |
 | `--color-copper` | `#C4531F` | **THE accent.** ≤3 uses per viewport |
 | `--color-copper-hover` | `#A9451A` | Accent hover |
-| `--color-copper-soft` | `rgba(196,83,31,.10)` | Wash behind featured/SVMH column |
+| `--color-copper-soft` | `rgba(196,83,31,.10)` | Wash behind featured/SVIND column |
 | `--color-copper-wire` | `rgba(196,83,31,.34)` | Ghost-button border |
 | `--color-safe` `--color-warn` `--color-alert` | green / amber / red | In-stock · lead-time · safety-critical only |
 | `--color-text` `--color-text-secondary` `--color-text-muted` | | Body / secondary / metadata |
@@ -113,7 +113,7 @@ Overlay: `.nav__overlay` › `.nav__overlay-list` › `.nav__overlay-link`, plus
 <header class="nav">
   <div class="container nav__inner">
     <a class="nav__brand" href="/">
-      <span class="nav__wordmark">SVMH</span>
+      <span class="nav__wordmark">SVIND</span>
       <span class="nav__descriptor">EOT &amp; Gantry Cranes · Bengaluru</span>
     </a>
     <nav class="nav__menu" aria-label="Main">
@@ -205,8 +205,8 @@ Wrap in `.spec-table-wrap` (mobile scroll + shadow affordance). `--leader` gives
 </div>
 ```
 
-### `.compare-table` — pain × common × SVMH
-Wrap in `.compare-table-wrap`. The third column carries `.compare-table__svmh` on **both** its `<th scope="col">` and every `<td>`. `.compare-table__spec` for mono cells. `<caption>` required.
+### `.compare-table` — pain × common × SVIND
+Wrap in `.compare-table-wrap`. The third column carries `.compare-table__SVIND` on **both** its `<th scope="col">` and every `<td>`. `.compare-table__spec` for mono cells. `<caption>` required.
 
 ### `.chips` — process flow
 `.chips` › `.chips__item` (`--active`) › `.chips__num` + `.chips__label`. Use `<ol>`; separators are CSS-generated and decorative.

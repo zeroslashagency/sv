@@ -24,7 +24,7 @@
     "title": "Double-girder EOT crane up to 100 T \u2014 manufacturer in Bengaluru | SVMH"
   },
   "index.html": {
-    "bands": 9,
+    "bands": 14,
     "counter_steps": [
       1,
       2,
@@ -32,10 +32,16 @@
       4,
       5,
       6,
-      7
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13
     ],
-    "counter_total": "07",
-    "frames": 7,
+    "counter_total": "13",
+    "frames": 13,
     "h1_count": 1,
     "navy_bands": 1,
     "navy_panels": 1,
@@ -59,7 +65,7 @@
       13,
       14
     ],
-    "counter_total": "14",
+    "counter_total": "13",
     "frames": 14,
     "h1_count": 1,
     "navy_bands": 1,
@@ -83,5 +89,128 @@
     "navy_bands": 1,
     "navy_panels": 1,
     "title": "Request a quote \u2014 EOT &amp; gantry cranes \u00b7 SVMH Bengaluru"
+  },
+  "downloads.html": {
+    "bands": 5,
+    "counter_steps": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "counter_total": "05",
+    "frames": 5,
+    "h1_count": 1,
+    "navy_bands": 1,
+    "navy_panels": 0,
+    "title": "Downloads &amp; technical documents — EOT crane certificates, datasheets, CAD · SVMH"
+  },
+  "contact.html": {
+    "bands": 6,
+    "counter_steps": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "counter_total": "06",
+    "frames": 6,
+    "h1_count": 1,
+    "navy_bands": 1,
+    "navy_panels": 1,
+    "title": "Contact SVMH — EOT crane manufacturer Bengaluru · Harohalli KIADB"
+  },
+  "eot-cranes.html": {
+    "bands": 8,
+    "counter_steps": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "counter_total": "07",
+    "frames": 7,
+    "h1_count": 1,
+    "navy_bands": 0,
+    "navy_panels": 0,
+    "title": "EOT Cranes — Electric Overhead Travelling Cranes | SVMH Bengaluru"
+  },
+  "gantry-cranes.html": {
+    "bands": 8,
+    "counter_steps": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "counter_total": "07",
+    "frames": 7,
+    "h1_count": 1,
+    "navy_bands": 0,
+    "navy_panels": 0,
+    "title": "Gantry & Goliath Cranes — Portal and Semi-Goliath | SVMH Bengaluru"
+  },
+  "jib-cranes.html": {
+    "bands": 8,
+    "counter_steps": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "counter_total": "07",
+    "frames": 7,
+    "h1_count": 1,
+    "navy_bands": 0,
+    "navy_panels": 0,
+    "title": "Jib Cranes — Pillar and Wall-Mounted | SVMH Bengaluru"
+  },
+  "hoists.html": {
+    "bands": 8,
+    "counter_steps": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "counter_total": "07",
+    "frames": 7,
+    "h1_count": 1,
+    "navy_bands": 0,
+    "navy_panels": 0,
+    "title": "Hoists & Crab Units — Wire Rope and Chain Hoists | SVMH Bengaluru"
+  },
+  "crane-spare-parts.html": {
+    "bands": 8,
+    "counter_steps": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "counter_total": "07",
+    "frames": 7,
+    "h1_count": 1,
+    "navy_bands": 0,
+    "navy_panels": 0,
+    "title": "Crane Spare Parts & Components — EOT, Gantry, Jib | SVMH Bengaluru"
   }
 }

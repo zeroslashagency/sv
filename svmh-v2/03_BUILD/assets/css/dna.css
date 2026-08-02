@@ -1,5 +1,5 @@
 /* ==========================================================================
-   SVMH v2 — dna.css
+   SVIND v2 — dna.css
    Implements 01_DESIGN/07_DNA_RM_TEREX.md signature moves S1–S5 plus the
    §6 media-card anatomy. Load LAST:
      tokens.css → base.css → components.css → dna.css
@@ -72,6 +72,7 @@
 .dna-band--stage {
   padding-block-end: clamp(32px, 4vw, 48px);
   min-height: clamp(360px, 42vw, 583px);
+  height: 959.18px;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -189,7 +190,9 @@
 .dna-knockout--stage {
   position: absolute;
   inset-block-start: clamp(72px, 11vw, 131px);
-  inset-inline-start: 30vw;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 937.301px;
 }
 
 /* --------------------------------------------------------------------------
@@ -559,6 +562,70 @@
   width: 10px;
   height: 10px;
   background-color: var(--color-navy);
+}
+
+/* --------------------------------------------------------------------------
+   7b. TRUST STRIP
+   Navy band with 6 cells, hairline separators. Micro-caps labels.
+   ISO 9001 cell links to PDF. Used once per page, after hero.
+   -------------------------------------------------------------------------- */
+
+.dna-trust-strip {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  margin: 0;
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+@media (min-width: 640px) {
+  .dna-trust-strip {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .dna-trust-strip {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+
+.dna-trust-strip__cell {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-5) var(--space-4);
+  background-color: var(--color-navy);
+  min-height: 88px;
+}
+
+.dna-trust-strip__cell .eyebrow {
+  margin: 0;
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.dna-trust-strip__value {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--color-surface);
+}
+
+.dna-trust-strip__link {
+  color: var(--color-surface);
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.3);
+  text-underline-offset: 2px;
+  transition: text-decoration-color var(--dur-fast) var(--ease-out);
+}
+
+.dna-trust-strip__link:hover {
+  text-decoration-color: var(--color-surface);
 }
 
 /* --------------------------------------------------------------------------

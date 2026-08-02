@@ -6,7 +6,7 @@ One file, vanilla ES2020, no dependencies, no build step. Loaded once per page:
 <script src="assets/js/site.js" defer></script>
 ```
 
-Everything runs inside one IIFE. The only global is `window.SVMH` (`{ version, reducedMotion(), closeMenu() }`). Every module null-checks its targets, so a page may omit any component. The script never generates markup and never assigns `innerHTML`; all text goes through `textContent`.
+Everything runs inside one IIFE. The only global is `window.SVIND` (`{ version, reducedMotion(), closeMenu() }`). Every module null-checks its targets, so a page may omit any component. The script never generates markup and never assigns `innerHTML`; all text goes through `textContent`.
 
 Implements exactly `../css/COMPONENT_CONTRACT.md` §5. It touches no class or attribute not listed below.
 
@@ -115,4 +115,4 @@ Implements exactly `../css/COMPONENT_CONTRACT.md` §5. It touches no class or at
 
 **Performance** — one shared scroll listener for progress + nav, `requestAnimationFrame`-coalesced, `{ passive: true }`. Resize work is debounced (120 ms scroll metrics, 150 ms menu breakpoint). Reveal and counter observers unobserve after firing.
 
-**Globals** — `window.SVMH` only: `version`, `reducedMotion()`, `closeMenu()`.
+**Globals** — `window.SVIND` only: `version`, `reducedMotion()`, `closeMenu()`.

@@ -1,5 +1,5 @@
 /* ==========================================================================
-   SVMH v2 — components.css
+   SVIND v2 — components.css
    Depends on tokens.css + base.css. Load third.
    Governing aesthetic: 01_DESIGN/06_DESIGN_RECALIBRATION.md (clean minimal).
    Rules honoured throughout:
@@ -1298,8 +1298,8 @@
 
 /* --------------------------------------------------------------------------
    COMPARE TABLE
-   .compare-table — 3 columns: pain / common solution / SVMH solution.
-   The SVMH column carries the copper-soft wash and a copper top rule.
+   .compare-table — 3 columns: pain / common solution / SVIND solution.
+   The SVIND column carries the copper-soft wash and a copper top rule.
    Requires <caption> and scope="col" on all three headers.
    -------------------------------------------------------------------------- */
 
@@ -1369,13 +1369,13 @@
   border-block-end: 0;
 }
 
-/* The SVMH column. Wash + copper header text + 2px copper top rule. */
-.compare-table__svmh {
+/* The SVIND column. Wash + copper header text + 2px copper top rule. */
+.compare-table__SVIND {
   background-color: var(--color-copper-soft);
   color: var(--color-text);
 }
 
-.compare-table thead .compare-table__svmh {
+.compare-table thead .compare-table__SVIND {
   color: var(--color-copper);
   box-shadow: inset 0 2px 0 0 var(--color-copper);
 }

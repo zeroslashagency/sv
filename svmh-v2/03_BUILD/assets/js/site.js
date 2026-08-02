@@ -1,5 +1,5 @@
 /* ==========================================================================
-   SVMH v2 — site.js
+   SVIND v2 — site.js
    One file, vanilla ES2020, no dependencies, loaded with `defer`.
    Implements exactly the behaviours in COMPONENT_CONTRACT.md §5.
    Every module null-checks its targets: any component may be absent from a
@@ -776,7 +776,7 @@
   }
 
   // Single global. Nothing else is exported.
-  window.SVMH = {
+  window.SVIND = {
     version: '2.0.0',
     reducedMotion: reduceMotion,
     closeMenu: function () { if (menu) menu.close(false); }

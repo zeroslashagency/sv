@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap");
 
 /* ==========================================================================
-   SVMH v2 — base.css
+   SVIND v2 — base.css
    Reset, document defaults, layout primitives, a11y utilities.
    Depends on tokens.css. Load order: tokens.css → base.css → components.css
    Mobile-first. min-width media queries only.
