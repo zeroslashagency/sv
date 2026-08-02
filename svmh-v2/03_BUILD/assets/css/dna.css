@@ -254,7 +254,7 @@
 
 /* Hero cutout image transform - visual refinement */
 .dna-cutout--stage img[alt="Goliath gantry crane built by SVMH, single-girder portal on rail-mounted legs"] {
-  transform: translate(-72px, 0px) scale(1.2) rotate(-3deg);
+  transform: translate(-77px, 0px) scale(1.25) rotate(-2deg);
 }
 
 /* --------------------------------------------------------------------------
