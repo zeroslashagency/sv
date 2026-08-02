@@ -136,13 +136,23 @@
   box-shadow: inset 0 -2px 0 0 var(--color-ink);
 }
 
-/* Copper CTA cell — the right-most cell. Copper appearance #2. */
-.nav__cta {
+/* Copper CTA cell — the right-most cell. Copper appearance #2.
+
+   The hide/show pair is scoped `.nav .nav__cta` rather than `.nav__cta` on
+   purpose. Three of the four built pages write `class="btn nav__cta"`, and
+   `.btn` further down this file sets `display: inline-flex`. A bare
+   `.nav__cta` ties with `.btn` on specificity and loses on source order, so
+   the mobile hide silently failed: at 390px the CTA stayed in the header,
+   wrapped onto two lines and crowded the burger, while duplicating the quote
+   action already present in .mobile-bar and the overlay foot. Both rules carry
+   the same scope so the pair stays symmetrical -- change one, change the
+   other. 04_TEST/static/test_layout.py fails if either loses its scope. */
+.nav .nav__cta {
   display: none;
 }
 
 @media (min-width: 1024px) {
-  .nav__cta {
+  .nav .nav__cta {
     display: flex;
     align-items: center;
     gap: var(--space-2);
@@ -158,7 +168,7 @@
     transition: background-color var(--dur-fast) var(--ease-out);
   }
 
-  .nav__cta:hover {
+  .nav .nav__cta:hover {
     background-color: var(--color-copper-hover);
     color: var(--color-text-on-accent);
   }

@@ -298,21 +298,33 @@ p a:not([class]):hover {
    8. CONTAINER — fluid, 1240px max, clamped gutter
    -------------------------------------------------------------------------- */
 
+/* Used by the nav rail, the footer and the mobile overlay -- all of which
+   paint full width and cap only their contents. The inline padding is
+   --band-inset, the same token the bands use, so the wordmark, the footer
+   columns and the band content all sit on one vertical line at every
+   viewport. A fixed max-width here would break that alignment as soon as
+   the viewport passed the cap: the nav would stay narrow while the bands
+   below it kept widening. */
 .container {
   width: 100%;
-  max-width: calc(var(--max-content) + (var(--gutter) * 2));
-  margin-inline: auto;
-  padding-inline: var(--gutter);
+  padding-inline: var(--band-inset);
 }
 
 /* Full-bleed product stages */
+/* The two variants below opt back INTO a capped, centred measure. The base
+   .container no longer sets a max-width, so each carries its own plus the
+   auto margin that centres it. Neither is used by a built page yet; they are
+   kept coherent so adopting one does not silently produce a full-width
+   block. */
 .container--wide {
-  max-width: calc(var(--max-wide) + (var(--gutter) * 2));
+  max-width: var(--max-wide);
+  margin-inline: auto;
 }
 
 /* Narrow, for single-column editorial */
 .container--narrow {
-  max-width: calc(880px + (var(--gutter) * 2));
+  max-width: 880px;
+  margin-inline: auto;
 }
 
 /* --------------------------------------------------------------------------

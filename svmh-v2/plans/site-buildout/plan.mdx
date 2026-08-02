@@ -1,0 +1,263 @@
+# SVMH site build-out — 40 missing routes
+
+The nav on all four built pages promises a site that does not exist. Forty internal routes are linked and unbuilt. This plan closes them in the existing DNA theme, adds two motion moves that belong to this design language, and fixes a routing defect that is currently invisible to the test suite.
+
+Five research lanes ran in parallel across two models before any of this was written. Every claim below was re-verified directly against the repo.
+
+## The finding that reorders everything
+
+Before adding pages, the routing has to be settled — because three of the four **already-built** pages return 404 at their own canonical URL.
+
+<Diagram id="routing-defect" caption="A visitor clicking the nav gets a 404, while the test suite scores the same link as built.">
+
+```html
+<div class="diagram-panel" data-rough>
+  <div class="diagram-card">
+    <div class="diagram-pill">What ships</div>
+    <div class="diagram-node">href="/eot-cranes/double-girder"</div>
+    <div class="diagram-node">canonical: /eot-cranes/double-girder</div>
+    <div class="diagram-node">on disk: double-girder.html</div>
+  </div>
+  <div class="diagram-card">
+    <div class="diagram-pill">Visitor</div>
+    <div class="diagram-node diagram-bad">GET /eot-cranes/double-girder &rarr; 404</div>
+    <div class="diagram-muted">http.server does no .html fallback</div>
+  </div>
+  <div class="diagram-card">
+    <div class="diagram-pill">Test suite</div>
+    <div class="diagram-node diagram-ok">PASS</div>
+    <div class="diagram-muted">test_links.py fabricates the extensionless alias instead of requesting it</div>
+  </div>
+</div>
+```
+
+```css
+.diagram-panel { display: flex; gap: 14px; flex-wrap: wrap; align-items: stretch; }
+.diagram-card { flex: 1 1 240px; display: flex; flex-direction: column; gap: 8px; padding: 12px; }
+.diagram-node { padding: 6px 8px; font-size: 13px; }
+.diagram-bad { border-color: var(--wf-danger, currentColor); font-weight: 600; }
+.diagram-ok { font-weight: 600; }
+.diagram-muted { font-size: 12px; opacity: 0.75; }
+```
+
+</Diagram>
+
+Measured against the running dev server:
+
+<Table
+  id="routing-evidence"
+  columns={["Requested path", "Status", "Note"]}
+  rows={[
+    ["/", "200", "only nav link that works"],
+    ["/request-a-quote", "404", "its own declared canonical"],
+    ["/eot-cranes/double-girder", "404", "its own declared canonical"],
+    ["/locations/bangalore", "404", "its own declared canonical"],
+    ["/eot-cranes", "301", "directory listing, no index.html"],
+    ["/request-a-quote.html", "200", "the only form that resolves"],
+  ]}
+/>
+
+<Callout id="routing-decision" tone="decision">
+
+**Every route becomes `<route>/index.html`.** That is the only layout that resolves identically under `python3 -m http.server` (which `README.md:93` prescribes) and on Netlify, Cloudflare Pages, Vercel and GitHub Pages. A flat `eot-cranes.html` layout would work in production and 404 locally — the kind of split that hides for months.
+
+Consequence: the three existing pages move to `<route>/index.html`. `tools/make_sitemap.py:31-33` and `test_seo.py:85-87` both strip only the `index.html` segment and leave a trailing slash, while canonicals are slash-less. Those two helpers need one shared normalisation step, or the sitemap tests go red on the first moved page.
+
+</Callout>
+
+## Scope: subpages, not subdomains
+
+Resolved from evidence rather than assumption. Every canonical tag already declares a path on one host (`https://www.svind.co.in/eot-cranes/double-girder`), every nav href is root-absolute, and `00_PLAN/01_SITEMAP_IA.md:64` structures the whole IA as root-level pillars. Real subdomains would mean rewriting all 40 hrefs, splitting SEO authority across hosts, and duplicating the theme per host — against the grain of every artifact in the repo.
+
+## Six duplicate routes are typos, not alternates
+
+Each conflicting pair resolves to a single canonical. In every case the stray form appears on exactly one page while the canonical form appears on three or four, and `00_PLAN/03_CONTENT_SEO_MATRIX.md:106` requires self-referencing canonicals that never compete.
+
+<Table
+  id="duplicate-routes"
+  columns={["Canonical", "Stray (delete)", "Evidence"]}
+  rows={[
+    ["/eot-cranes/hot-metal-ladle-foundry", "/eot-cranes/hot-metal-ladle", "01_SITEMAP_IA.md:71 · stray leaked into JSON-LD at double-girder.html:57"],
+    ["/locations/bangalore", "/bangalore", "bangalore.html:8 canonical + sitemap.xml:21; stray is 3 self-links on that page"],
+    ["/locations/karnataka", "/karnataka", "01_SITEMAP_IA.md:107 · stray only at bangalore.html:1097"],
+    ["/services/amc-preventive-maintenance", "/services/amc", "01_SITEMAP_IA.md:93 — long slug is deliberate keyword real estate"],
+    ["/services", "/service-and-spares", "01_SITEMAP_IA.md:86 — a /service-and-spares hub would orphan /services/* children"],
+    ["/resources/crane-duty-class-explained", "/resources/crane-duty-class", "01_SITEMAP_IA.md:118"],
+  ]}
+/>
+
+The `/eot-cranes/hot-metal-ladle` case is the damaging one: it sits in machine-consumed structured data, so a crawler is being told a non-existent URL is the product's home.
+
+<Callout id="products-open" tone="warning">
+
+**`/products` needs your call.** It appears in no planning document, yet ships as breadcrumb position 1 (`double-girder.html:203`) and inside BreadcrumbList JSON-LD (`double-girder.html:65`). Meanwhile `02_PAGE_WIREFRAME_SPEC.md:47` mandates the breadcrumb *label* "Products / EOT Cranes / Double Girder" without ever specifying a URL. Either make position 1 unlinked text, or build a real `/products` index. I will not guess between two defensible readings.
+
+</Callout>
+
+## Phase 0 — Stop the bleeding before multiplying it
+
+The header and footer get copied into 40 new pages. Every defect in them multiplies by ten. This phase is small and entirely blocking.
+
+<Checklist
+  id="phase-0"
+  items={[
+    { id: "p0-route", label: "Convert to <route>/index.html and normalise the sitemap/test helpers together", note: "Blocks everything: page 5 onward must be born on the right layout." },
+    { id: "p0-contact", label: "Replace placeholder contact data — 13 broken links", note: "tel:+910000000000 (6x), wa.me/910000000000 (6x), malformed mailto:[CLIENT-TO-CONFIRM] at request-a-quote.html:683. Needs real values from the client." },
+    { id: "p0-jsonld", label: "Purge placeholders from structured data", note: "bangalore.html:38 \"postalCode\": \"CLIENT-TO-CONFIRM\" and :41 fake telephone are being served to crawlers as fact." },
+    { id: "p0-footer", label: "Make nav and footer byte-identical across all pages", note: "Four different footer address blocks today; double-girder.html:1093 has no phone, WhatsApp, PIN or hours." },
+    { id: "p0-strays", label: "Delete the six stray routes, including the JSON-LD leak at double-girder.html:57" },
+    { id: "p0-fixture-gate", label: "Add test_fixtures.py BEFORE page 5", note: "Highest-value test in this plan — see the fixture time bomb below." },
+    { id: "p0-linkgate", label: "Make test_links.py fail on absolute links to unbuilt routes", note: "Currently report-only at test_links.py:81-83, which is why 40 dead links sit in a green run." },
+  ]}
+/>
+
+<Callout id="fixture-bomb" tone="risk">
+
+**The fixture time bomb.** `test_structure.py:24` does `exp = expected.get(page, {})` and every fixture assertion is then guarded by `if exp:` at line 53. Add a page to `PAGES` without running `conftest.py --refresh` and its 8 fixture checks are **silently skipped** — the run stays green while coverage quietly drops. At 40 pages that is 320 checks that can vanish without a single red line. Build the gate before the pages, not after.
+
+</Callout>
+
+## Build order
+
+Sequenced by `00_PLAN/01_SITEMAP_IA.md:55-97` priorities and by dead links closed per page built. Hubs first: they are linked from all four existing pages, so each one closes the most references.
+
+<Table
+  id="phases"
+  columns={["Phase", "Pages", "Archetype / template", "Why here"]}
+  rows={[
+    ["0", "0 new (fix 4 existing)", "—", "Routing + placeholders + test gates"],
+    ["1", "7 hubs: /eot-cranes, /gantry-cranes, /jib-cranes, /hoists, /crane-spare-parts, /services, /resources", "Pillar hub — double-girder.html minus spec table, plus spoke card grid", "Linked from all 4 pages; 00_MASTER_PLAN.md:62 names the 6 pillars as phase 1"],
+    ["2", "5: /about, /contact, /downloads, /certifications-and-trust, /locations", "Utility — request-a-quote.html shell (8 bands, shortest)", "Unblocks trust + conversion path; /contact is linked 3x"],
+    ["3", "2: /privacy, /terms", "Legal — no spec exists in 00_PLAN", "Linked 6x and 3x but unspecified; needs client copy"],
+    ["4", "3 product spokes: /eot-cranes/single-girder, /eot-cranes/hot-metal-ladle-foundry, /gantry-cranes/double-girder-goliath", "Product detail — double-girder.html is an exact structural match", "12-section spec at 02_PAGE_WIREFRAME_SPEC.md:44-60; ladle page adds IS 4137 + M8"],
+    ["5", "7: /industries + 6 industry pages", "Industry (T4) — 02_PAGE_WIREFRAME_SPEC.md:80-88", "Pain x common solution x SVMH solution comparison table"],
+    ["6", "2 service detail: /services/amc-preventive-maintenance, /services/inspection-load-testing", "Service variant — spec table becomes scope/response-time table", "Needs client response-window numbers ([X] appears 15x)"],
+    ["7", "6: /resources + 5 standards articles", "Resource (T6) — weakest coverage, needs new CSS", "No 68ch measure or sticky ToC exists yet"],
+    ["8", "2: /locations/karnataka, robots.txt", "Location (T3) — bangalore.html exact match", "Gated: 02_PAGE_WIREFRAME_SPEC.md:78 forbids a city page without one genuine local project"],
+  ]}
+/>
+
+## Motion: two moves, both earned
+
+The site has **zero `@keyframes`**. Nothing moves unbidden. Live travel maxes out at 8px, there is exactly one easing curve, and hover states are 160ms "and barely there" (`tokens.css:278`). Any animation has to respect that or it will read as bolted on.
+
+Also relevant: ~27% of `site.js` never executes. `.reveal` (site.js:306), `data-count-to` (site.js:424) and `data-filter` (site.js:498) are bound in JS and emitted by **no page** — verified, 0 hits each. There is a fully built, contract-documented reveal system sitting switched off.
+
+<Table
+  id="motion"
+  columns={["Move", "What happens", "Cost", "Reduced motion"]}
+  rows={[
+    ["S1 knockout wipe-in", "The giant wordmark resolves by horizontal clip-path over 560ms, so letters emerge from behind the product cut-out that already occludes them. Reads as a press laying ink, not a web fade.", "Compositor-only clip-path. ~25 lines JS reusing the existing observer shape.", "clip-path: none — final state is pixel-identical to today"],
+    ["S4 panel deal-in", "The three-up row arrives by its 4px gutters opening left-to-right, navy panel landing last. Animating negative space — almost nobody does this.", "transform on 3 elements, 4px travel, inside the existing 1-8px vocabulary.", "transform: none; base.css:623 already zeroes the stagger delays"],
+  ]}
+/>
+
+Both animate elements the design law names as signature moves (S1, S4), using the ornament the design law names as its ornament (clip, gutters). The knockout is `aria-hidden="true"` and `user-select: none`, so the headline move carries zero accessibility surface.
+
+**Rejected, with reasons:** fade-up-on-scroll everything (that *is* `.reveal`, and four finished pages deliberately declined it); parallax hero (the stage band is a 3-layer overlap the render suite tests for collisions); counting numbers (the machinery exists, but the values include `M8`, `807` and `2006` — counting up to a standards code is absurd); any looping motion (would break the system's defining rule).
+
+<Callout id="will-change" tone="risk">
+
+**Fix the contradiction first.** `test_layout.py` now asserts `.dna-knockout--stage` carries no `will-change`, on the grounds that a permanent hint pins a compositor layer for decorative content. But `components.css:36` and `components.css:1829` both ship permanent `will-change` — and 1829 is on `.reveal`, a class no page emits, so it is pure cost. Activating the reveal system makes that hint live on every revealed element. Remove it in the same change, and generalise the test from one selector to all of `components.css` + `dna.css` with a documented exception list.
+
+Where a compositor hint is genuinely wanted: add it in JS at animation start, remove it on `transitionend`. Promotion that lives exactly as long as the motion.
+
+</Callout>
+
+## Per-page definition of done
+
+Ten items, from `00_MASTER_PLAN.md:104-118` plus what the suite actually enforces.
+
+<Checklist
+  id="dod"
+  items={[
+    { id: "dod-pages", label: "Page added to conftest.py PAGES and fixtures refreshed in the same commit", note: "Otherwise 8 checks silently skip." },
+    { id: "dod-counter", label: "S3 counter total equals the real .dna-band count, steps sequential 1..N", note: "test_structure.py:59-78 fails on any mismatch." },
+    { id: "dod-css", label: "Stylesheets in order tokens -> base -> components -> dna", note: "Enforced by test_structure.py:34-39." },
+    { id: "dod-dna", label: "At least one signature move (S1-S5); every band carries the S3 frame; all knockouts aria-hidden", note: "07_DNA_RM_TEREX.md section 8 QA list." },
+    { id: "dod-radii", label: "Zero radii, zero shadows except product ground shadow, zero borders on panels, zero gradients" },
+    { id: "dod-navy", label: "Navy is the only accent; max one inverted panel per row; no concrete/copper/watermark tokens" },
+    { id: "dod-type", label: "At most 3 non-decorative type sizes per viewport (knockout layer excluded)" },
+    { id: "dod-seo", label: "Self-referencing canonical on the svind.co.in origin, parseable JSON-LD, title 15-75 chars", note: "test_seo.py:29-64. Note 3 of 4 existing pages already violate the title limit." },
+    { id: "dod-facts", label: "No invented facts — every number traces to 00_PLAN or carries [CLIENT TO CONFIRM]", note: "README.md:83; test_content.py:48 sanctions only [CLIENT TO CONFIRM], [X], [N], [PIN." },
+    { id: "dod-verify", label: "04_TEST/run.sh green, and every new assertion mutation-tested to red", note: "README.md:106-108 — the only evidence a green run means anything." },
+  ]}
+/>
+
+## What the test suite cannot see
+
+Worth stating plainly, because a green run is currently weaker than it looks.
+
+<Table
+  id="blind-spots"
+  columns={["Blind spot", "What ships undetected"]}
+  rows={[
+    ["No JS execution at all", "Dead code sat in a green build: .reveal, counters, filters. A completely broken animation passes."],
+    ["Absolute unbuilt links are report-only", "40 dead nav links, green (test_links.py:81-83)."],
+    ["Fixtures can go stale silently", "Up to 320 skipped checks at 40 pages."],
+    ["No cross-page comparison", "Nav/footer drift; duplicate canonicals; conflicting JSON-LD @id."],
+    ["Placeholders pass if marked", "51+ placeholder instances are counted, never failed."],
+    ["JSON-LD only checked for parseability", "Valid JSON asserting a fake phone number passes."],
+  ]}
+/>
+
+New suites, in the order they should land: `test_fixtures.py` (before page 5), link-graph failure on unbuilt routes (before nav scales), `test_consistency.py` for byte-identical nav/footer (before page 3), `test_structured_data.py` (after 10 pages). All stdlib-only Python, matching existing style, each mutation-tested.
+
+## Also worth fixing while here
+
+Found during research, cheap, and larger levers than anything in this plan:
+
+- **`base.css:1` imports Google Fonts via `@import`.** The critical path is document → `base.css` → Google CSS → WOFF2, four levels deep, with no `preconnect` or `preload` anywhere. The entire type system is Inter Tight and the knockout is 120–320px of it, so this gates the most visually dominant element on every page.
+- **No `srcset`, no WebP/AVIF.** Band images are served at 1600px wide to phones.
+- **Missing sitewide:** OpenGraph (0 tags), Twitter card (0), favicon (0), theme-color (0), `robots.txt` (absent, while 3 pages link `/sitemap.xml`).
+- **Meta descriptions run 235–330 chars.** Google truncates around 155.
+- **`COMPONENT_CONTRACT.md` is stale and actively misleading** — it names a superseded design doc as law and documents retired values, including `--color-white: #FCFBF8` "never `#FFFFFF`" when surface *is* pure white now. A builder following it would produce drift.
+
+### Open Questions
+
+<QuestionForm
+  id="open-questions"
+  questions={[
+    {
+      id: "products-route",
+      title: "How should /products resolve?",
+      subtitle: "It ships in breadcrumbs and JSON-LD but appears in no planning document.",
+      mode: "single",
+      options: [
+        { id: "unlinked", label: "Make breadcrumb position 1 unlinked text", detail: "Satisfies the mandated label without inventing a page. Smallest change.", recommended: true },
+        { id: "build", label: "Build a real /products index", detail: "A hub above the 6 pillars. More work, and 01_SITEMAP_IA.md:64 puts pillars at root." },
+      ],
+    },
+    {
+      id: "existing-pages-move",
+      title: "Move the three existing pages to <route>/index.html?",
+      subtitle: "Required for their own canonicals to resolve. The alternative is rewriting canonicals to .html.",
+      mode: "single",
+      options: [
+        { id: "move", label: "Move them", detail: "Canonicals, sitemap and inbound links all already assume extensionless. Keeps local and hosted identical.", recommended: true },
+        { id: "rewrite", label: "Rewrite canonicals to .html", detail: "Less file churn, but contradicts 00_PLAN and every inbound link." },
+      ],
+    },
+    {
+      id: "client-data",
+      title: "Can you get the client data that blocks launch?",
+      subtitle: "12 items. Phone, WhatsApp, email, PIN, CIN, response windows, install counts, INR price bands, spares policy, one genuine Bangalore project, GBP embed, ISO 9001 + IS 807 PDFs.",
+      mode: "single",
+      options: [
+        { id: "yes", label: "Yes — I will supply them", detail: "Phase 0 completes and pages ship without placeholders.", recommended: true },
+        { id: "partial", label: "Contact details only for now", detail: "Fixes the 13 broken links and the JSON-LD leak; prose placeholders stay marked." },
+        { id: "later", label: "Proceed with placeholders", detail: "Accepts that 00_MASTER_PLAN.md:64 exit criteria ('zero placeholder copy') is not met." },
+      ],
+    },
+    {
+      id: "animation-scope",
+      title: "Both motion moves, or start with one?",
+      mode: "single",
+      options: [
+        { id: "both", label: "Both — knockout wipe + panel deal-in", detail: "~60 lines JS, one observer, compositor-only, zero AT surface.", recommended: true },
+        { id: "knockout", label: "Knockout wipe only", detail: "The signature move alone. Lowest risk, no no-JS caveat." },
+        { id: "none", label: "No animation yet", detail: "Ship pages first, revisit motion after the routing and placeholder work lands." },
+      ],
+    },
+  ]}
+/>

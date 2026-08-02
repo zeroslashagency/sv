@@ -214,19 +214,28 @@
   --band-y: clamp(64px, 7vw, 112px);
   --band-y-tight: clamp(32px, 4vw, 56px);
   --gutter: clamp(20px, 4vw, 40px);
-  --band-pad-x: clamp(20px, 7vw, 93px);   /* DNA inner band padding */
+  /* --band-pad-x is retired. It was the band's fixed inner padding, replaced
+     by the fluid --band-inset below. Left as an alias so any rule still
+     naming it keeps working rather than collapsing to 0. */
+  --band-pad-x: var(--band-inset);
 
-  /* Bands are full-bleed, so the reading width is capped inside them. This
-     is the inline padding that keeps content on the --max-content measure:
-     --band-pad-x until the viewport passes --max-content + 2 * --band-pad-x,
-     then it grows to absorb the surplus so the content block stays centred
-     and text never stretches on an ultrawide display. Below that threshold
-     the calc() term goes negative, and max() is what floors the padding at
-     --band-pad-x instead of letting it collapse. */
-  --band-inset: max(
-    var(--band-pad-x),
-    calc((100% - var(--max-content)) / 2)
-  );
+  /* Inline padding for every band. Bands are full-bleed, so this is what
+     positions the content column inside the edge-to-edge fill.
+
+     It scales with the viewport instead of pinning content to a fixed pixel
+     measure. A fixed cap here (it was --max-content, 1240px) left ~280px of
+     dead space per side at 1800px: the fill reached the edge but the content
+     did not follow, so the page read as a narrow column floating in a wide
+     frame. Every heading and paragraph already caps itself in `ch` units
+     (--dna-head 22ch, --dna-lead 46ch, --max-panel-text 30ch), so line
+     length is governed there, not here -- which is why the padding is free
+     to grow proportionally without stretching any text.
+
+     6.5vw keeps the left/right breathing room proportional at every size, and
+     --max-shoulder stops it running away on an ultrawide display. Layout
+     containment is asserted by 04_TEST/static/test_layout.py. */
+  --max-shoulder: 200px;
+  --band-inset: clamp(20px, 6.5vw, var(--max-shoulder));
 
   /* ---------------------------------------------------------------------
      LAYOUT

@@ -167,13 +167,29 @@
   color: var(--color-navy-deep);
 }
 
-/* Knockout parked behind the stage content, bled off the left edge. Offset
-   from --band-inset so it keeps its relationship to the content column
-   rather than drifting away from it as the viewport widens. */
+/* Knockout parked behind the stage content, indented into the band so the
+   product cut-out crosses it rather than sitting clear of it (S1).
+
+   Both offsets are viewport-relative, not fixed pixels. The design edit that
+   set this position was captured at 1440px as `left: 432px; top: 131px`;
+   432px is exactly 30vw at that width, so the horizontal offset is expressed
+   as 30vw and reproduces the captured position there while continuing to
+   scale. A literal 432px would push the glyph run past the band's right edge
+   at 1024px and 768px -- measured at 1075px and 914px against band widths of
+   1024px and 768px -- which is why it is not pasted verbatim.
+
+   The vertical offset keeps its clamp and only raises the ceiling to the
+   captured 131px; the 72px floor still protects narrow bands where the
+   label/counter row needs to clear the glyph.
+
+   No `will-change` here. The capture carried `will-change: top, left` because
+   the element was being dragged; nothing animates these properties at
+   runtime, and a permanent hint would keep a compositor layer alive for a
+   decorative element on every page. */
 .dna-knockout--stage {
   position: absolute;
-  inset-block-start: clamp(72px, 11vw, 118px);
-  inset-inline-start: calc(var(--band-inset) - clamp(12px, 3vw, 30px));
+  inset-block-start: clamp(72px, 11vw, 131px);
+  inset-inline-start: 30vw;
 }
 
 /* --------------------------------------------------------------------------
