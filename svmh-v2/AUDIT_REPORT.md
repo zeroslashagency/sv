@@ -1,562 +1,817 @@
-# SVMH v2 Codebase Audit Report
-**Date:** 2026-08-02  
-**Status:** Phase 1 in progress — 4 pages built, 35 unbuilt  
-**Test Suite:** ✅ All passing (107/107 tests)
+# Website Project Audit & Organization Report
+**Date:** 2026-08-03  
+**Project:** SVMH-v2 (S.V. Material Handling System website)
 
 ---
 
-## Executive Summary
+## EXECUTIVE SUMMARY
 
-The codebase is **structurally sound and well-architected**, with strict quality gates enforced by automated tests. All 4 built pages pass structure, SEO, DNA compliance, asset integrity, and accessibility checks. However, there is a **significant content gap** between the planned sitemap (39+ routes) and what's currently built (4 pages), creating a navigation structure that links to non-existent pages.
-
-### Critical Findings
-
-1. ✅ **Architecture is correct** — design system enforced, test suite robust, no technical debt
-2. ⚠️ **Navigation structure is incomplete** — 39 routes linked but only 4 exist
-3. ⚠️ **Subsection mapping misalignment** — homepage has 8 sections vs 12 planned
-4. ⚠️ **Missing trust strip** — planned for section #2, not present in any page
-5. ✅ **DNA signature moves properly implemented** — S1–S5 all present and correct
+**Critical Findings:**
+1. ✅ **Downloaded website is WRONG SOURCE** - FullOption Craft renovation company, NOT crane manufacturer
+2. ❌ **hub.html is a duplicate/clone** with incorrect navigation paths (relative vs absolute)
+3. ⚠️ **Navigation inconsistency** - Mix of `/services.html`, `/pages/services/services.html`, `/about.html`, `/pages/company/about.html`
+4. ⚠️ **Multiple index.html files** with same canonical URL in eot-cranes folder
+5. 🗑️ **6 .DS_Store files** polluting the repository
 
 ---
 
-## 1. Built vs Planned Pages
+## PART 1: DOWNLOADED WEBSITE AUDIT
 
-### What EXISTS (4 pages)
-- ✅ `index.html` — Homepage
-- ✅ `request-a-quote.html` — RFQ form
-- ✅ `eot-cranes/double-girder.html` — Product detail page
-- ✅ `locations/bangalore.html` — Local SEO page
-
-### What's MISSING but LINKED (39 routes, sorted by link frequency)
-
-| Route | Times linked | Priority | Template |
-|-------|--------------|----------|----------|
-| `/downloads` | 13× | P0 | T7 Utility |
-| `/eot-cranes` | 11× | P0 | T2 Pillar |
-| `/contact` | 9× | P0 | T7 Utility |
-| `/crane-spare-parts` | 9× | P0 | T2 Pillar |
-| `/about` | 8× | P1 | T7 Utility |
-| `/industries` | 8× | P1 | Hub |
-| `/eot-cranes/hot-metal-ladle-foundry` | 7× (4×+7×) | P0 | T2 Spoke ★ niche wedge |
-| `/eot-cranes/single-girder` | 7× | P0 | T2 Spoke |
-| `/services` | 7× | P0 | T2 Pillar |
-| `/gantry-cranes` | 6× | P0 | T2 Pillar |
-| `/jib-cranes` | 6× | P0 | T2 Pillar |
-| `/resources` | 8× | P1 | Hub |
-| `/certifications-and-trust` | 5× | P0 | T7 Utility |
-| `/services/amc-preventive-maintenance` | 5× | P1 | T2 Service |
-| `/services/inspection-load-testing` | 4× | P1 | T2 Service |
-| `/industries/{automotive,steel,foundry,power}` | 3× each | P1 | T4 Industry |
-| `/resources/eot-crane-price-in-india` | 3× | P1 | T6 Resource ★ gap premium |
-| `/resources/is-3177-rfq-checklist` | 4× | P1 | T6 Resource |
-| `/resources/is-807-classification` | 1× | P1 | T6 Resource ★ India gap |
-| `/hoists` | 2× | P0 | T2 Pillar |
-| `/locations/karnataka` | 2× | P0 | T3 Location |
-| `/privacy`, `/terms` | 6×, 3× | — | Legal |
-
-**Key observations:**
-- **6 product pillars** are planned but only 1 spoke exists (`/eot-cranes/double-girder`)
-- The **foundry/ladle niche page** (`/eot-cranes/hot-metal-ladle-foundry`) is linked 11× total but doesn't exist — this is the **profit wedge** per the master plan
-- `/downloads` is the most-linked missing page (13×), yet it's a **P0 credibility asset**
-- No **trust strip** page exists, despite being mandatory in the plan
-
----
-
-## 2. Homepage Section Mapping — MISALIGNMENT DETECTED
-
-### PLANNED sections (from `00_PLAN/02_PAGE_WIREFRAME_SPEC.md`):
-
-| # | Section | Purpose |
-|---|---------|---------|
-| 1 | Hero | One dominant message + CTA |
-| 2 | **Trust strip** | ISO 9001, GST, MSME — kill "are they real?" objection |
-| 3 | Three doors | Route by intent: New Cranes / Spares / AMC |
-| 4 | Product index | 6 cards: EOT, Gantry, Jib, Hoists, Spares, Services |
-| 5 | Foundry/ladle wedge | IS 4137 niche differentiator |
-| 6 | Proof band | Stat lockups: `100 T` / `SINCE 2006` / `IS 807` |
-| 7 | Why not the cheap quote | TCO table (pain × common × SVMH) |
-| 8 | How we deliver | Process chips + accordion |
-| 9 | Industries | 6 tiles, foundry inverted |
-| 10 | Local | Harohalli address, service radius, GBP |
-| 11 | Resources teaser | IS 807 explainer, guides, factory video |
-| 12 | RFQ | Inline 4-field form |
-
-### ACTUAL sections in `index.html` (counter sequence: 01–07):
-
-| Counter | Label | Heading ID | What it is |
-|---------|-------|------------|------------|
-| **01**/07 | Manufacturer | `hero-h` | Hero (S1 knockout + S2 cutout + copy) |
-| **02**/07 | Range | `range-h` | Product index — 3 cards (single/double/ladle EOT only) |
-| **03**/07 | How we deliver | `deliver-h` | S4 three-up numbered panels (survey/fab/install) |
-| **04**/07 | In service | `service-h` | Proof-load photo + copy |
-| **05**/07 | Proof | `proof-h` | S5 stat lockups (20 yrs / 100T / IS standards / installs) |
-| **06**/07 | Foundry duty | `foundry-h` | Navy inverted band — ladle crane niche |
-| **07**/07 | From the works | `works-h` | Media cards (3× fabrication/gearbox/dispatch photos) |
-| (unnumbered) | — | `rfq-h` | RFQ call-to-action band |
-
-### ❌ MISSING sections (planned but not implemented):
-
-1. **Section #2: Trust strip** — The ISO 9001 / GST / MSME credibility bar
-   - Purpose: Kill "are they real?" objection before scroll 2
-   - Design: Ink band, 6 cells, ISO links to PDF
-   - **Impact:** Without this, first-time visitors have no immediate proof of legitimacy
-
-2. **Section #3: Three doors** — New Cranes / Spares / AMC routing bands
-   - Purpose: Route visitors by intent (not by product knowledge)
-   - Design: 3 full-bleed alternating bands, each with cut-out + CTA
-   - **Impact:** Navigation assumes product knowledge; doesn't serve "I need spares" or "I need service" entry paths
-
-3. **Section #7: Why not the cheap quote** — TCO comparison table
-   - Purpose: Reframe from "price of steel" to "20-year TCO + safety liability"
-   - Design: 3-column table (Pain × Common solution × SVMH solution)
-   - **Impact:** Missing the strategic positioning anchor; site currently leads with features, not value differentiation
-
-4. **Section #9: Industries** — 6-tile industry grid
-   - Purpose: Second-axis entry for "what plant do you run?" visitors
-   - **Impact:** No industry-first navigation path; automotive/steel/power buyers have no clear entry
-
-5. **Section #10: Local** — Bengaluru/Karnataka geographic anchor
-   - Purpose: Own local SERP, contest K2 Cranes on home turf
-   - **Impact:** Homepage doesn't establish local presence; SEO opportunity missed
-
-6. **Section #11: Resources teaser** — Educational content preview
-   - Purpose: Capture research-stage engineers (not yet in procurement)
-   - **Impact:** No awareness-stage funnel; site assumes buyer is already in consideration phase
-
-### ✅ PRESENT but REORDERED/MODIFIED:
-
-- **Section #4: Product index** → Implemented as counter **02/07** "Range"
-  - But shows only 3 cards (EOT family) instead of planned 6 (EOT, Gantry, Jib, Hoists, Spares, Services)
-  - Missing: Gantry, Jib, Hoists as separate cards
-
-- **Section #5: Foundry/ladle wedge** → Implemented as counter **06/07** "Foundry duty"
-  - ✅ Correctly navy-inverted, correctly positioned as differentiator
-  - ⚠️ Should appear earlier (planned #5, actual #6)
-
-- **Section #6: Proof band** → Implemented as counter **05/07** "Proof"
-  - ✅ S5 stat lockups correctly implemented
-  - ✅ 4 lockups: "20 yrs" / "100 T" / "IS 807/3177/4137" / installs
-
-- **Section #8: How we deliver** → Implemented as counter **03/07**
-  - ✅ S4 three-up panels correctly implemented
-  - ✅ Third panel correctly navy-inverted
-  - ⚠️ Moved earlier in flow (planned #8, actual #3)
-
-- **Section #12: RFQ** → Implemented but not in counter sequence
-  - ✅ Present as final band before footer
-  - ⚠️ Not the "inline 4-field form" specified — it's a CTA redirect to `/request-a-quote`
-
----
-
-## 3. DNA Signature Moves — ✅ CORRECTLY IMPLEMENTED
-
-All 5 mandatory signature moves from `01_DESIGN/07_DNA_RM_TEREX.md` are present:
-
-### S1 — Giant white knockout wordmark
-- ✅ Line 135: `<p class="dna-knockout dna-knockout--stage" aria-hidden="true">SVIND</p>`
-- ✅ Occluded by S2 cutout (goliath gantry crane)
-- ✅ Properly marked `aria-hidden` (decorative only)
-
-### S2 — Product cutout with ground shadow
-- ✅ Line 137: `cutout-goliath-gantry.png` — background-free PNG on gray canvas
-- ✅ Overlaps the knockout wordmark (S1)
-
-### S3 — Label/counter frame (every band)
-- ✅ 7 frames present, sequence 01→07 with no gaps
-- ✅ Format: `<b>NN</b><span class="dna-frame__rule"></span>07`
-- ✅ Test enforces: counter sequence integrity, total matches
-
-### S4 — Three-up numbered panel row, third inverted navy
-- ✅ Section 03 "How we deliver" implements this exactly
-- ✅ Panels: Survey/design (01) → Fabricate/test (02) → Install/maintain (03, navy)
-
-### S5 — Stat lockup (giant knockout numeral + navy caption)
-- ✅ Section 05 "Proof" implements 4 lockups:
-  - "20" + "Years manufacturing"
-  - "100" + "Tonnes capacity"
-  - "IS 807" + "Standards compliance"
-  - "[N]" + "Customer installs"
-
----
-
-## 4. Design System Compliance — ✅ PASSING
-
-### Palette (DNA rules enforced by `test_dna_rules.py`)
-- ✅ Cool gray canvas (`#EFEFEF` / `#E7E7E7`)
-- ✅ Navy accent (`#1E3A6B`) — only accent color
-- ✅ No retired colors (concrete `#EFECE6`, copper `#C4531F`) detected
-- ✅ Zero radii enforced
-- ✅ No shadows except ground shadows
-
-### Typography
-- ✅ Inter Tight + IBM Plex Mono
-- ✅ Knockout/display/body/micro-caps hierarchy observed
-- ✅ Spec data in `spec-mono` (IBM Plex Mono)
-
-### Component anatomy
-- ✅ Media cards follow §6 specification (DNA doc)
-- ✅ Whole-card hover implemented (CSS)
-- ✅ 4–8px gutters (not borders) for separation
-
----
-
-## 5. Structural Quality — ✅ PASSING
-
-All pages pass structural tests:
-
-### Semantic HTML
-- ✅ Exactly 1 `<h1>` per page
-- ✅ No heading-level skips
-- ✅ `<main>` present with `id="main"`
-- ✅ Skip link present (`href="#main"`)
-
-### Stylesheet load order (enforced)
-- ✅ `tokens.css` → `base.css` → `components.css` → `dna.css`
-- ✅ Test fails if order is wrong (layer cascade depends on this)
-
-### Accessibility
-- ✅ `aria-labelledby` correctly maps sections to headings
-- ✅ Decorative elements marked `aria-hidden="true"`
-- ✅ Keyboard navigation supported (nav toggle, skip link)
-- ✅ Focus states defined (2px navy ring)
-
-### SEO
-- ✅ Unique `<title>` and `<meta name="description">` per page
-- ✅ Canonical URLs declared
-- ✅ JSON-LD structured data (Organization, LocalBusiness, Product, BreadcrumbList, FAQPage)
-- ✅ Alt text on all images (spec-bearing: capacity/span/industry)
-
----
-
-## 6. Asset Integrity — ✅ PASSING
-
-All referenced assets exist:
-- ✅ 11 images in `assets/img/` (bands, cards, cutouts)
-- ✅ 4 CSS files in correct load order
-- ✅ 1 JS file (`assets/js/site.js`)
-- ✅ Sitemap exists and validates
-- ✅ Test enforces: no broken asset references, no upscaled images beyond source resolution
-
----
-
-## 7. Test Coverage — ✅ COMPREHENSIVE
-
-`04_TEST/run.sh` enforces:
-
-### Static tests (no browser needed)
-- ✅ `test_structure.py` — H1 count, heading hierarchy, landmark structure, stylesheet order
-- ✅ `test_seo.py` — meta tags, canonical URLs, structured data validity
-- ✅ `test_dna_rules.py` — retired palette banned, counter sequences, navy panel limits
-- ✅ `test_assets.py` — all images exist, dimensions logged
-- ✅ `test_links.py` — no broken relative links, inventories unbuilt routes
-- ✅ `test_content.py` — no lorem ipsum, no placeholder hostnames in structured data
-
-### HTTP test
-- ✅ Every page and asset returns 200 (served via Python http.server)
-
-### Known gaps
-- ⚠️ No browser-based rendering tests (Lighthouse scores not automated)
-- ⚠️ No contrast-ratio verification (manual check required)
-- ⚠️ Form submission not tested (RFQ flow endpoint TBD)
-
----
-
-## 8. Navigation Structure Analysis
-
-### Header navigation (desktop)
+### Location
 ```
-Products ▾  Industries ▾  Service & spares ▾  Resources ▾  Company ▾  [Get a quote →]
-```
-- ✅ Structure correct per plan
-- ⚠️ All dropdowns link to unbuilt pages (mega-panel content not implemented)
-
-### Mobile overlay navigation
-10 links, all absolute paths:
-- 4× EOT sub-family (`/eot-cranes`, `/eot-cranes/hot-metal-ladle-foundry`, single/double missing)
-- 2× Other product families (`/gantry-cranes`, `/jib-cranes`, `/hoists`)
-- 1× Spares (`/crane-spare-parts`)
-- 1× Services (`/services`)
-- 2× Hubs (`/industries`, `/resources`, `/about`)
-
-**Issue:** Overlay assumes a flat product taxonomy but links to unbuilt pillar pages
-
-### Footer navigation (4 columns)
-- ✅ Well-organized: Cranes / Industries+Locations / Service+Company
-- ⚠️ 18 links, 14 point to unbuilt pages
-- ✅ NAP block present (address, GST, phone/WhatsApp marked `[CLIENT TO CONFIRM]`)
-
-### Internal linking patterns
-- ✅ Product cards link to spokes (`/eot-cranes/single-girder`, `/eot-cranes/double-girder`)
-- ✅ CTA buttons link to `/request-a-quote` (exists)
-- ✅ "About" teasers link to `/about` (doesn't exist)
-- ⚠️ No lateral product-to-service-to-spares triangles (per §4 IA linking rules)
-
----
-
-## 9. Critical Gaps Ranked by Impact
-
-### P0 — Blocks conversion
-1. **Trust strip missing** — No immediate credibility proof (ISO 9001, GST, MSME)
-2. **Foundry/ladle niche page missing** (`/eot-cranes/hot-metal-ladle-foundry`) — Linked 11×, it's the profit wedge
-3. **Downloads page missing** (`/downloads`) — Linked 13×, datasheets are the procurement proof
-4. **Contact page missing** (`/contact`) — Linked 9×, NAP scattered but no single contact hub
-5. **Product pillar pages missing** — `/eot-cranes`, `/gantry-cranes`, `/jib-cranes`, `/hoists`, `/crane-spare-parts` all linked but don't exist
-
-### P1 — Blocks SEO & positioning
-6. **Industries hub + 6 industry pages missing** — Second-axis entry path doesn't exist
-7. **Local/Bengaluru section missing from homepage** — Doesn't establish geographic anchor on home page
-8. **TCO comparison table missing** — Strategic positioning ("20-year TCO vs price of steel") not present
-9. **Resources hub + standards articles missing** — No awareness-stage funnel
-10. **Three-doors routing missing** — Site assumes product knowledge; "I need spares" visitors have no clear path
-
-### P2 — Usability & completeness
-11. **Product index incomplete** — Shows 3 EOT cards, missing Gantry/Jib/Hoists/Spares/Services as separate cards
-12. **Service detail pages missing** — AMC, inspection, modernization sub-pages planned but not built
-13. **Case studies missing** — Proof band exists, but no project detail pages
-14. **Legal pages missing** — `/privacy`, `/terms` linked in footer but don't exist
-
----
-
-## 10. Recommended Action Plan
-
-### Phase 1A — Close critical conversion gaps (Week 1)
-
-**Priority: Credibility & niche wedge**
-
-1. **Add trust strip to homepage** (Section #2)
-   - Implement the ink band with 6 cells: ISO 9001 (PDF link) / GST / MSME / IS 807 / Since 2006 / [N] installs
-   - Place immediately after hero, before product index
-   - DNA: Full-bleed `--color-navy` band, micro-caps labels, hairline cells
-
-2. **Build `/eot-cranes/hot-metal-ladle-foundry`** (T2 spoke, ladle variant)
-   - Most-linked missing page (11× total)
-   - This is the **profit wedge** (IS 4137, M8 duty, foundry/steel niche)
-   - Include: molten-metal safety block, thermal shield detail, India-vs-import cost argument
-   - Inline RFQ with product pre-selected
-
-3. **Build `/downloads`** (T7 utility)
-   - 13× linked
-   - Filterable index: datasheets / certificates / catalogues / CAD
-   - Ungated (per competitive research)
-   - Include: ISO 9001 PDF, GST certificate, MSME declaration, product datasheets
-
-4. **Build `/contact`** (T7 utility)
-   - 9× linked
-   - NAP block, map embed, department routing, WhatsApp, callback scheduler
-   - Consolidates scattered contact info
-
-### Phase 1B — Complete product spine (Week 2)
-
-**Priority: Navigation integrity**
-
-5. **Build 5 product pillar pages** (T2 pillar template)
-   - `/eot-cranes` (11× linked) — Hub for single/double/ladle
-   - `/gantry-cranes` (6× linked)
-   - `/jib-cranes` (6× linked)
-   - `/hoists` (2× linked)
-   - `/crane-spare-parts` (9× linked)
-   - Each pillar links to its spokes, carries product family overview
-
-6. **Build `/eot-cranes/single-girder`** (T2 spoke)
-   - 7× linked
-   - Completes the EOT family (single/double/ladle)
-
-7. **Expand homepage product index** (Section #4)
-   - Currently 3 cards (EOT only)
-   - Add 3 more: Gantry, Jib, Hoists (to match plan)
-   - OR keep 3-card EOT focus and add pillar grid elsewhere
-
-### Phase 1C — Add positioning & routing (Week 3)
-
-**Priority: Strategic differentiation**
-
-8. **Add "Three doors" section to homepage** (Section #3)
-   - 3 full-bleed bands: New Cranes / Spares & Components / AMC Service
-   - Routes visitors by intent (not product knowledge)
-   - Place after trust strip, before product index
-
-9. **Add TCO comparison table to homepage** (Section #7)
-   - Pain × Common solution × SVMH solution
-   - Reframes from "price of steel" to "20-year TCO + safety liability"
-   - This is the strategic positioning anchor (from master plan)
-
-10. **Add industries hub + 6 industry tiles to homepage** (Section #9)
-    - Automotive, Steel, Foundry (inverted), Power, Cement, Construction
-    - Second-axis entry: "what plant do you run?"
-
-11. **Add local/Bengaluru section to homepage** (Section #10)
-    - Harohalli KIADB address, service radius, GBP embed
-    - Establishes geographic anchor, contests K2 Cranes
-
-### Phase 2 — Industry pages & resources (Weeks 4–6)
-
-**Priority: SEO & awareness funnel**
-
-12. **Build `/industries` hub + 6 industry pages** (T4 template)
-    - Automotive, Steel, Foundry, Power, Cement, Construction
-    - Each: pain/solution table, recommended cranes, case studies, compliance notes
-
-13. **Build `/resources` hub + 8 standards articles** (T6 template)
-    - IS 807 classification (table snippet target)
-    - Single-girder vs double-girder (table snippet)
-    - Crane duty class explained (FEM 9.511 table)
-    - IS 3177 RFQ checklist (list snippet)
-    - IS 4137 ladle crane requirements (niche authority)
-    - EOT crane price in India (price transparency gap)
-    - What does AMC include (list snippet)
-    - Glossary (long-tail catch-all)
-
-14. **Build `/about`** (T7 utility)
-    - Family story, MD Shri D. Umapathi, factory capability
-    - Humanizes per Street Crane reference pattern
-
-### Phase 3 — Service detail & proof (Weeks 7–10)
-
-15. **Build 5 service detail pages** (T2 service variant)
-    - `/services/amc-preventive-maintenance`
-    - `/services/inspection-load-testing`
-    - `/services/modernization-retrofit`
-    - `/services/fabrication`
-    - `/services/operator-training`
-
-16. **Build `/certifications-and-trust`** (T7 utility)
-    - ISO 9001 PDF viewer, IS declarations, factory infrastructure, QA process
-
-17. **Build 5+ case studies** (T5 template)
-    - Industry-tagged, capacity/span/duty specs
-    - Situation/Task/Solution/Result structure
-    - Client quotes or MD engineering notes
-
-18. **Add "Resources teaser" section to homepage** (Section #11)
-    - 3 links to top resources + factory video thumbnail
-
-### Phase 4 — Legal & polish (Week 11+)
-
-19. **Build legal pages**
-    - `/privacy` (6× linked)
-    - `/terms` (3× linked)
-
-20. **Run Lighthouse audits** (not automated yet)
-    - Target: ≥90 mobile perf, ≥95 a11y
-    - Fix any regressions
-
-21. **Add remaining location pages** (T3 template)
-    - `/locations` hub
-    - `/locations/karnataka`
-    - Additional cities only with real local projects
-
----
-
-## 11. Risk Assessment
-
-### HIGH RISK
-- **Navigation debt is growing**: Every new page adds more links to unbuilt pages
-- **No trust strip**: First-time visitors have no immediate proof SVMH is real (expired SSL history compounds this)
-- **Niche wedge incomplete**: The foundry/ladle page (profit margin differentiator) is heavily linked but doesn't exist
-
-### MEDIUM RISK
-- **Homepage section order doesn't match spec**: "How we deliver" appears at #3 instead of #8; may confuse stakeholders reviewing against plan
-- **Product index incomplete**: Shows EOT family only; Gantry/Jib/Hoists missing creates false impression of narrow range
-- **No TCO positioning**: Site leads with features; strategic "20-year TCO vs price" argument not present
-
-### LOW RISK
-- **Test suite is robust**: Structural integrity is enforced; design drift is caught
-- **Built pages are high quality**: All 4 pages pass every gate
-- **Asset pipeline is working**: Images properly processed, cutouts clean
-
----
-
-## 12. Quality Gates — Currently Enforced
-
-✅ **These are enforced by `04_TEST/run.sh`:**
-- Exactly 1 H1 per page
-- No heading-level skips
-- Stylesheet load order (tokens→dna)
-- DNA palette compliance (retired colors banned)
-- Counter sequence integrity (01→NN with no gaps)
-- Navy panel limits (max 1 per row)
-- Asset existence (all `src=` paths resolve)
-- No broken relative links
-- Canonical URL consistency
-- JSON-LD validity
-- No placeholder hostnames in structured data
-- No lorem ipsum
-
-⚠️ **NOT enforced (manual check required):**
-- Lighthouse mobile perf ≥90
-- Lighthouse a11y ≥95
-- Contrast ratios (4.5:1 body, 3:1 display)
-- Form submission end-to-end
-- WhatsApp/phone numbers populated (`[CLIENT TO CONFIRM]` present in 4 places)
-- Complete homepage section sequence per wireframe spec
-
----
-
-## 13. File Structure Health
-
-### Well-organized
-```
-00_PLAN/     → Complete, detailed, no gaps
-01_DESIGN/   → Authoritative DNA doc (07_DNA_RM_TEREX.md), design tokens
-02_WIREFRAMES/ → Planned but not checked (may not exist)
-03_BUILD/    → Clean, no placeholder files, assets properly organized
-04_TEST/     → Comprehensive, mutation-tested, robust
-tools/       → Asset processing scripts present
+/Users/xoxo/Downloads/us.sitesucker.mac.sitesucker-pro/www.fulloptioncraftreno.ca/
 ```
 
-### Observations
-- ✅ No stray files in `03_BUILD/`
-- ✅ Asset organization follows DNA roles (cutouts/, bands/, cards/, people/)
-- ✅ CSS architecture enforced: tokens → base → components → dna
-- ⚠️ `05_DEMO/` contains pre-DNA drafts — clearly quarantined, not shipped
-- ✅ README.md is accurate and helpful
+### ⛔ CRITICAL ISSUE: WRONG WEBSITE
+
+**This is NOT the SVMH crane manufacturer website!**
+
+The downloaded site is **FullOption Craft** (www.fulloptioncraftreno.ca), a renovation/home improvement company, NOT a crane manufacturer.
+
+**Evidence:**
+- Domain: www.fulloptioncraftreno.ca
+- Company: "Full Option Craft" 
+- Business: Home renovation services
+- Schema.org: "WebSite" name: "Full Option Craft"
+
+### Downloaded Website Structure
+```
+www.fulloptioncraftreno.ca/
+├── index.html (2.0M) - Home page
+├── about.html (1.3M) - About page
+├── contact.html (1.5M) - Contact page
+├── projects.html (2.6M) - Projects gallery
+├── services.html (1.2M) - Services page
+├── privacy-policy.html (1.2M)
+├── accessibility-statement.html (1.2M)
+└── _downloads.html (313B) - Stub/placeholder
+
+Total: 8 HTML files, 0 subdirectories
+No assets downloaded (CSS/JS/images missing)
+```
+
+**Files are Wix-generated** (bloated with Wix JavaScript, 1-2MB each)
+
+### ❌ ACTION REQUIRED
+**Delete or ignore this download entirely** - it's the wrong source and provides no value to the crane manufacturer website project.
 
 ---
 
-## 14. Stakeholder Communication
+## PART 2: 03_BUILD FOLDER AUDIT
 
-### What to tell the client
+### Current Structure
+```
+03_BUILD/
+├── .DS_Store ❌ DELETE
+├── .htaccess ✓
+├── index.html ✓ (58K) - Homepage
+├── sitemap.xml ✓
+│
+├── assets/
+│   ├── .DS_Store ❌ DELETE
+│   ├── css/
+│   │   ├── base.css
+│   │   ├── components.css
+│   │   ├── dna.css
+│   │   ├── tokens.css
+│   │   └── COMPONENT_CONTRACT.md
+│   ├── js/
+│   │   ├── site.js
+│   │   └── JS_CONTRACT.md
+│   ├── img/
+│   │   ├── .DS_Store ❌ DELETE
+│   │   ├── bands/ (3 images)
+│   │   ├── cards/ (9 images)
+│   │   ├── cutouts/ 
+│   │   │   ├── .DS_Store ❌ DELETE
+│   │   │   └── (2 images)
+│   │   ├── people/ (1 image)
+│   │   └── README.md
+│   └── docs/
+│       └── README.md
+│
+├── locations/
+│   └── bangalore.html ✓ (63K)
+│
+├── pages/
+│   ├── .DS_Store ❌ DELETE
+│   ├── company/
+│   │   ├── about.html ✓ (5.1K)
+│   │   └── contact.html ✓ (22K)
+│   ├── resources/
+│   │   ├── downloads.html ✓ (19K)
+│   │   └── resources.html ✓ (5.1K)
+│   └── services/
+│       ├── services.html ✓ (5.2K)
+│       └── request-a-quote.html ✓ (54K)
+│
+└── products/
+    ├── .DS_Store ❌ DELETE
+    ├── eot-cranes/
+    │   ├── index.html ✓ (25K) - EOT cranes hub
+    │   ├── hub.html ⚠️ DUPLICATE/CLONE - DELETE
+    │   └── double-girder.html ✓ (66K) - Product detail page
+    ├── gantry-cranes/
+    │   └── index.html ✓ (25K)
+    ├── hoists/
+    │   └── index.html ✓ (25K)
+    ├── jib-cranes/
+    │   └── index.html ✓ (25K)
+    └── spare-parts/
+        └── index.html ✓ (24K)
+```
 
-**Good news:**
-- "The 4 pages we've built pass every quality gate: structure, SEO, accessibility, design compliance"
-- "The test suite ensures no design drift and catches regressions automatically"
-- "The DNA signature moves (S1–S5) are correctly implemented and look premium"
-
-**Current state:**
-- "We've built 4 of 39 planned pages: homepage, RFQ, double-girder product page, Bangalore location page"
-- "The homepage has 8 of 12 planned sections — we're missing the trust strip, three-doors routing, TCO table, industries grid, local anchor, and resources teaser"
-- "Navigation links to 35 pages that don't exist yet; this is expected at Phase 1 but creates a roadmap"
-
-**Next steps:**
-- "Priority 1: Add the trust strip (ISO 9001 / GST proof) to the homepage — without it, first-time visitors have no credibility signal"
-- "Priority 2: Build the foundry/ladle niche page — it's linked 11× and it's your profit wedge"
-- "Priority 3: Complete the EOT product family (single-girder spoke) and pillar pages so navigation doesn't dead-end"
+**Total Files:** 47 files  
+**Total HTML:** 15 files  
+**Junk Files:** 6 .DS_Store files
 
 ---
 
-## 15. Summary — No Modifications Needed, But Work Remains
+## PART 3: PROBLEMS IDENTIFIED
 
-### ✅ What's working
-1. Architecture is sound — design system enforced, CSS layers correct, test suite robust
-2. Built pages are high quality — all gates pass
-3. DNA signature moves correctly implemented (S1–S5)
-4. Semantic HTML, accessibility foundations, SEO foundations all solid
-5. No technical debt, no placeholder files, no design drift
+### 🔴 CRITICAL PROBLEMS
 
-### ⚠️ What's misaligned
-1. **Homepage section sequence** — 8 sections exist, 12 were planned; 4 critical sections missing
-2. **Trust strip absent** — The credibility bar (ISO 9001 / GST / MSME) planned for section #2 doesn't exist
-3. **Navigation structure incomplete** — 39 routes linked, only 4 exist
-4. **Product index incomplete** — Shows 3 EOT cards, missing Gantry/Jib/Hoists
-5. **Strategic positioning missing** — TCO comparison table, three-doors routing, industries grid not present
+#### 1. hub.html is a DUPLICATE with WRONG NAVIGATION
 
-### 🎯 Recommended action
-- **Do NOT modify existing pages** — they pass all gates
-- **Execute Phase 1A first** — Add trust strip, build foundry/ladle page, build /downloads and /contact
-- **Then Phase 1B** — Complete product spine (5 pillar pages + single-girder spoke)
-- **Then Phase 1C** — Add missing homepage sections (three-doors, TCO table, industries, local)
-- **Phases 2–4** — Industry pages, resources, service detail, case studies, legal
+**File:** `03_BUILD/products/eot-cranes/hub.html`
+
+**Problem:**
+- Same content as `index.html` in the same folder
+- Same canonical URL: `https://www.svind.co.in/eot-cranes`
+- Same line count: 525 lines
+- **BUT:** Uses relative paths (`../`) instead of absolute paths (`/`)
+
+**Differences (86 lines):**
+```diff
+hub.html uses:                     index.html uses:
+href="../"                    →    href="/"
+href="../eot-cranes"          →    href="/products/eot-cranes"
+href="../request-a-quote"     →    href="/pages/services/request-a-quote"
+href="../crane-spare-parts"   →    href="/products/spare-parts"
+href="../about"               →    href="/about"
+href="../contact"             →    href="/contact"
+```
+
+**Why this is a problem:**
+- Creates confusion about which file is "correct"
+- Relative paths will break navigation
+- Duplicate content = SEO penalty if both accessible
+- Wastes development time
+
+**Root Cause:**
+You likely created `hub.html` as a working draft/experiment, then corrected the paths in `index.html`, but forgot to delete `hub.html`.
+
+**Solution:** DELETE `hub.html` immediately.
 
 ---
 
-**Conclusion:** The codebase is **structurally excellent but functionally incomplete**. No refactoring needed; the path forward is **additive**: build the missing pages following the established patterns, fill the homepage section gaps per the wireframe spec, and maintain the quality bar enforced by the test suite.
+#### 2. NAVIGATION PATH INCONSISTENCY
+
+**Problem:** The site uses two different URL patterns for the same pages.
+
+**Index.html links to:**
+```
+/services.html          (root level - DOESN'T EXIST)
+/resources.html         (root level - DOESN'T EXIST)  
+/about.html             (root level - DOESN'T EXIST)
+```
+
+**Actual file locations:**
+```
+/pages/company/about.html
+/pages/company/contact.html
+/pages/resources/resources.html
+/pages/resources/downloads.html
+/pages/services/services.html
+/pages/services/request-a-quote.html
+```
+
+**Why this works (currently):**
+The `.htaccess` file has URL rewriting enabled:
+```apache
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([^\.]+)$ $1.html [NC,L]
+```
+
+**But this creates problems:**
+1. Files need to exist at root OR in subdirectories, not referenced both ways
+2. Broken links if .htaccess fails or is removed
+3. Confusion about file organization
+4. Canonical URLs don't match file paths
+
+**Affected pages:**
+- `/about.html` → should be `/pages/company/about.html` OR moved to root
+- `/services.html` → should be `/pages/services/services.html` OR moved to root  
+- `/resources.html` → should be `/pages/resources/resources.html` OR moved to root
+- `/contact.html` → should be `/pages/company/contact.html` OR moved to root
+
+---
+
+### ⚠️ MODERATE PROBLEMS
+
+#### 3. Double-girder.html has WRONG CSS paths
+
+**File:** `03_BUILD/products/eot-cranes/double-girder.html`
+
+**Problem:**
+```html
+<link rel="stylesheet" href="../assets/css/tokens.css">
+```
+
+Should be:
+```html
+<link rel="stylesheet" href="../../assets/css/tokens.css">
+```
+
+**Current path:** `products/eot-cranes/double-girder.html`  
+**Assets path:** `assets/css/`  
+**Correct relative:** `../../assets/css/`  
+**Currently uses:** `../assets/css/` ❌
+
+This will cause CSS to NOT load on double-girder.html page.
+
+---
+
+#### 4. .DS_Store Files Polluting Repository
+
+**Files to delete:**
+```
+03_BUILD/.DS_Store
+03_BUILD/assets/.DS_Store
+03_BUILD/assets/img/.DS_Store
+03_BUILD/assets/img/cutouts/.DS_Store
+03_BUILD/pages/.DS_Store
+03_BUILD/products/.DS_Store
+```
+
+These are macOS metadata files that should NEVER be committed to a repository.
+
+**Add to .gitignore:**
+```
+.DS_Store
+**/.DS_Store
+```
+
+---
+
+### ℹ️ MINOR ISSUES / OBSERVATIONS
+
+#### 5. URL Structure Philosophy
+
+The site canonical URLs suggest flat structure:
+```
+https://www.svind.co.in/
+https://www.svind.co.in/eot-cranes
+https://www.svind.co.in/about
+https://www.svind.co.in/services
+https://www.svind.co.in/downloads
+```
+
+But the file structure is hierarchical:
+```
+03_BUILD/index.html
+03_BUILD/products/eot-cranes/index.html
+03_BUILD/pages/company/about.html
+03_BUILD/pages/services/services.html
+03_BUILD/pages/resources/downloads.html
+```
+
+This is OK if using .htaccess rewriting, but creates organizational confusion.
+
+---
+
+## PART 4: CANONICAL URL vs FILE LOCATION MAP
+
+| Canonical URL | File Location | Status |
+|--------------|---------------|--------|
+| `/` | `03_BUILD/index.html` | ✅ |
+| `/eot-cranes` | `03_BUILD/products/eot-cranes/index.html` | ✅ |
+| `/eot-cranes/double-girder` | `03_BUILD/products/eot-cranes/double-girder.html` | ⚠️ CSS paths broken |
+| `/gantry-cranes` | `03_BUILD/products/gantry-cranes/index.html` | ✅ |
+| `/hoists` | `03_BUILD/products/hoists/index.html` | ✅ |
+| `/jib-cranes` | `03_BUILD/products/jib-cranes/index.html` | ✅ |
+| `/crane-spare-parts` | `03_BUILD/products/spare-parts/index.html` | ✅ |
+| `/locations/bangalore` | `03_BUILD/locations/bangalore.html` | ✅ |
+| `/about` | `03_BUILD/pages/company/about.html` | ❌ Linked as `/about.html` (doesn't exist at root) |
+| `/contact` | `03_BUILD/pages/company/contact.html` | ❌ Linked as `/contact.html` (doesn't exist at root) |
+| `/services` | `03_BUILD/pages/services/services.html` | ❌ Linked as `/services.html` (doesn't exist at root) |
+| `/downloads` | `03_BUILD/pages/resources/downloads.html` | ❌ Linked as `/downloads` (works via rewrite) |
+| `/resources` | `03_BUILD/pages/resources/resources.html` | ❌ Linked as `/resources.html` (doesn't exist at root) |
+| `/request-a-quote` | `03_BUILD/pages/services/request-a-quote.html` | ✅ Correctly linked |
+
+---
+
+## PART 5: PROPOSED CLEAN STRUCTURE
+
+### Option A: FLAT STRUCTURE (Recommended for SEO)
+
+Move files to match canonical URLs:
+
+```
+03_BUILD/
+├── .htaccess
+├── index.html
+├── sitemap.xml
+│
+├── about.html          ← MOVE from pages/company/
+├── contact.html        ← MOVE from pages/company/
+├── services.html       ← MOVE from pages/services/
+├── resources.html      ← MOVE from pages/resources/
+├── downloads.html      ← MOVE from pages/resources/
+├── request-a-quote.html ← MOVE from pages/services/
+│
+├── locations/
+│   └── bangalore.html
+│
+├── eot-cranes/         ← RENAME from products/eot-cranes/
+│   ├── index.html
+│   └── double-girder.html
+│
+├── gantry-cranes/      ← RENAME from products/gantry-cranes/
+│   └── index.html
+│
+├── hoists/             ← RENAME from products/hoists/
+│   └── index.html
+│
+├── jib-cranes/         ← RENAME from products/jib-cranes/
+│   └── index.html
+│
+├── spare-parts/        ← RENAME from products/spare-parts/
+│   └── index.html
+│
+└── assets/
+    ├── css/
+    ├── js/
+    ├── img/
+    └── docs/
+```
+
+**Advantages:**
+- File paths match canonical URLs exactly
+- No .htaccess rewriting needed (more portable)
+- Clear, predictable structure
+- Easier debugging
+
+**Disadvantages:**
+- More files at root level
+- Less semantic organization (no "pages" or "products" grouping)
+
+---
+
+### Option B: HIERARCHICAL STRUCTURE (Current, needs fixes)
+
+Keep current structure but fix links and create proper rewrites:
+
+```
+03_BUILD/
+├── .htaccess (update rewrite rules)
+├── index.html
+├── sitemap.xml
+│
+├── locations/
+│   └── bangalore.html
+│
+├── pages/
+│   ├── company/
+│   │   ├── about.html       → accessible as /about
+│   │   └── contact.html     → accessible as /contact
+│   ├── resources/
+│   │   ├── downloads.html   → accessible as /downloads
+│   │   └── resources.html   → accessible as /resources
+│   └── services/
+│       ├── services.html    → accessible as /services
+│       └── request-a-quote.html → accessible as /request-a-quote
+│
+└── products/
+    ├── eot-cranes/
+    │   ├── index.html           → accessible as /eot-cranes
+    │   └── double-girder.html   → accessible as /eot-cranes/double-girder
+    ├── gantry-cranes/
+    │   └── index.html           → accessible as /gantry-cranes
+    ├── hoists/
+    │   └── index.html           → accessible as /hoists
+    ├── jib-cranes/
+    │   └── index.html           → accessible as /jib-cranes
+    └── spare-parts/
+        └── index.html           → accessible as /spare-parts
+```
+
+**Advantages:**
+- Semantic grouping (products/, pages/)
+- Easier to understand content categories
+- Less cluttered root
+
+**Disadvantages:**
+- Requires .htaccess rewriting
+- File paths don't match URLs
+- More complex debugging
+- Rewrite rules must be perfect
+
+---
+
+## PART 6: STEP-BY-STEP MIGRATION PLAN
+
+### PHASE 1: CLEANUP (IMMEDIATE)
+
+#### Step 1: Delete junk files
+```bash
+cd /Users/xoxo/Documents/resreah/sv/svmh-v2/03_BUILD
+
+# Delete all .DS_Store files
+find . -name ".DS_Store" -type f -delete
+
+# Verify deletion
+find . -name ".DS_Store"
+```
+
+#### Step 2: Delete duplicate hub.html
+```bash
+# Backup first (optional)
+cp products/eot-cranes/hub.html products/eot-cranes/hub.html.backup
+
+# Delete
+rm products/eot-cranes/hub.html
+
+# Verify
+ls products/eot-cranes/
+```
+
+#### Step 3: Add .gitignore rules
+```bash
+# Create/update .gitignore in project root
+echo ".DS_Store" >> .gitignore
+echo "**/.DS_Store" >> .gitignore
+echo "*.backup" >> .gitignore
+```
+
+---
+
+### PHASE 2: FIX CRITICAL ISSUES
+
+#### Step 4: Fix double-girder.html CSS paths
+```bash
+# File: 03_BUILD/products/eot-cranes/double-girder.html
+# Lines 9-12
+
+# FIND:
+<link rel="stylesheet" href="../assets/css/tokens.css">
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/components.css">
+<link rel="stylesheet" href="../assets/css/dna.css">
+
+# REPLACE WITH:
+<link rel="stylesheet" href="../../assets/css/tokens.css">
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/components.css">
+<link rel="stylesheet" href="../../assets/css/dna.css">
+```
+
+---
+
+### PHASE 3: CHOOSE STRUCTURE & MIGRATE
+
+#### Option A: FLAT STRUCTURE MIGRATION
+
+```bash
+cd /Users/xoxo/Documents/resreah/sv/svmh-v2/03_BUILD
+
+# Move company pages to root
+mv pages/company/about.html ./about.html
+mv pages/company/contact.html ./contact.html
+
+# Move service pages to root
+mv pages/services/services.html ./services.html
+mv pages/services/request-a-quote.html ./request-a-quote.html
+
+# Move resource pages to root
+mv pages/resources/resources.html ./resources.html
+mv pages/resources/downloads.html ./downloads.html
+
+# Rename products/ folder to match canonical URLs
+mv products/eot-cranes ./eot-cranes
+mv products/gantry-cranes ./gantry-cranes
+mv products/hoists ./hoists
+mv products/jib-cranes ./jib-cranes
+mv products/spare-parts ./spare-parts
+
+# Delete empty folders
+rm -rf pages/
+rm -rf products/
+
+# Update all CSS paths in moved files
+# about.html, contact.html, services.html, etc.
+# FROM: href="../../assets/css/
+# TO:   href="assets/css/
+
+# Update CSS paths in product folders
+# FROM: href="../../assets/css/
+# TO:   href="../assets/css/
+```
+
+**Files requiring CSS path updates after moving:**
+- `about.html` → `href="assets/css/"`
+- `contact.html` → `href="assets/css/"`
+- `services.html` → `href="assets/css/"`
+- `request-a-quote.html` → `href="assets/css/"`
+- `resources.html` → `href="assets/css/"`
+- `downloads.html` → `href="assets/css/"`
+- `eot-cranes/index.html` → `href="../assets/css/"` (no change)
+- `eot-cranes/double-girder.html` → `href="../assets/css/"` (change from `href="../../assets/css/"`)
+
+---
+
+#### Option B: HIERARCHICAL STRUCTURE (Keep current, fix links)
+
+**Update .htaccess:**
+```apache
+RewriteEngine On
+
+# Product rewrites
+RewriteRule ^eot-cranes/?$ products/eot-cranes/index.html [L]
+RewriteRule ^eot-cranes/(.+)$ products/eot-cranes/$1 [L]
+RewriteRule ^gantry-cranes/?$ products/gantry-cranes/index.html [L]
+RewriteRule ^hoists/?$ products/hoists/index.html [L]
+RewriteRule ^jib-cranes/?$ products/jib-cranes/index.html [L]
+RewriteRule ^spare-parts/?$ products/spare-parts/index.html [L]
+RewriteRule ^crane-spare-parts/?$ products/spare-parts/index.html [L]
+
+# Company pages
+RewriteRule ^about/?$ pages/company/about.html [L]
+RewriteRule ^contact/?$ pages/company/contact.html [L]
+
+# Service pages
+RewriteRule ^services/?$ pages/services/services.html [L]
+RewriteRule ^request-a-quote/?$ pages/services/request-a-quote.html [L]
+
+# Resource pages
+RewriteRule ^resources/?$ pages/resources/resources.html [L]
+RewriteRule ^downloads/?$ pages/resources/downloads.html [L]
+
+# Default rule for other pages
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([^\.]+)$ $1.html [NC,L]
+```
+
+**Update index.html navigation links:**
+```html
+<!-- FIND these -->
+<a href="/services.html">
+<a href="/resources.html">
+<a href="/about.html">
+
+<!-- REPLACE with -->
+<a href="/services">
+<a href="/resources">
+<a href="/about">
+```
+
+---
+
+### PHASE 4: VALIDATION
+
+#### Verify all links work
+```bash
+# Install link checker (if needed)
+npm install -g broken-link-checker
+
+# Check all internal links
+blc http://localhost:8000 -ro
+```
+
+#### Manual checklist:
+- [ ] Homepage loads with CSS
+- [ ] All navigation links work
+- [ ] Product pages load correctly
+- [ ] Double-girder.html CSS loads
+- [ ] No 404 errors in browser console
+- [ ] All images load
+- [ ] Breadcrumbs work
+- [ ] Footer links work
+
+---
+
+## PART 7: EXACT COMMAND SEQUENCE
+
+### RECOMMENDED: FLAT STRUCTURE MIGRATION
+
+```bash
+#!/bin/bash
+# SVMH Website Cleanup & Migration Script
+# Run from: /Users/xoxo/Documents/resreah/sv/svmh-v2
+
+cd 03_BUILD
+
+echo "=== Phase 1: Cleanup ==="
+
+# Delete .DS_Store files
+find . -name ".DS_Store" -type f -delete
+echo "✓ Deleted .DS_Store files"
+
+# Delete duplicate hub.html
+rm products/eot-cranes/hub.html
+echo "✓ Deleted hub.html duplicate"
+
+echo ""
+echo "=== Phase 2: Backup ==="
+
+# Create backup
+cd ..
+tar -czf 03_BUILD_backup_$(date +%Y%m%d_%H%M%S).tar.gz 03_BUILD/
+echo "✓ Created backup"
+
+cd 03_BUILD
+
+echo ""
+echo "=== Phase 3: File Migration ==="
+
+# Move pages to root
+mv pages/company/about.html ./about.html
+mv pages/company/contact.html ./contact.html
+mv pages/services/services.html ./services.html
+mv pages/services/request-a-quote.html ./request-a-quote.html
+mv pages/resources/resources.html ./resources.html
+mv pages/resources/downloads.html ./downloads.html
+echo "✓ Moved pages to root"
+
+# Rename product folders
+mv products/eot-cranes ./eot-cranes
+mv products/gantry-cranes ./gantry-cranes
+mv products/hoists ./hoists
+mv products/jib-cranes ./jib-cranes
+mv products/spare-parts ./spare-parts
+echo "✓ Moved product folders"
+
+# Delete empty directories
+rm -rf pages/
+rm -rf products/
+echo "✓ Removed empty directories"
+
+echo ""
+echo "=== Phase 4: Update CSS Paths ==="
+
+# Root-level pages: ../../assets/css/ → assets/css/
+sed -i '' 's|href="../../assets/css/|href="assets/css/|g' about.html
+sed -i '' 's|href="../../assets/css/|href="assets/css/|g' contact.html
+sed -i '' 's|href="../../assets/css/|href="assets/css/|g' services.html
+sed -i '' 's|href="../../assets/css/|href="assets/css/|g' request-a-quote.html
+sed -i '' 's|href="../../assets/css/|href="assets/css/|g' resources.html
+sed -i '' 's|href="../../assets/css/|href="assets/css/|g' downloads.html
+echo "✓ Updated root-level page CSS paths"
+
+# bangalore.html: ../assets/css/ → assets/css/
+sed -i '' 's|href="../assets/css/|href="assets/css/|g' locations/bangalore.html
+echo "✓ Updated bangalore.html CSS paths"
+
+# double-girder.html: ../assets/css/ → ../assets/css/ (was wrong before)
+sed -i '' 's|href="../assets/css/|href="../assets/css/|g' eot-cranes/double-girder.html
+echo "✓ Fixed double-girder.html CSS paths"
+
+echo ""
+echo "=== Phase 5: Update Internal Links ==="
+
+# Update index.html navigation
+sed -i '' 's|href="/products/eot-cranes"|href="/eot-cranes"|g' index.html
+sed -i '' 's|href="/products/gantry-cranes"|href="/gantry-cranes"|g' index.html
+sed -i '' 's|href="/products/hoists"|href="/hoists"|g' index.html
+sed -i '' 's|href="/products/jib-cranes"|href="/jib-cranes"|g' index.html
+sed -i '' 's|href="/products/spare-parts"|href="/spare-parts"|g' index.html
+echo "✓ Updated navigation links"
+
+echo ""
+echo "=== MIGRATION COMPLETE ==="
+echo ""
+echo "Next steps:"
+echo "1. Test locally: python3 -m http.server 8000"
+echo "2. Open http://localhost:8000"
+echo "3. Check all navigation links"
+echo "4. Verify CSS loads on all pages"
+echo "5. Run link checker"
+echo ""
+echo "Backup location: ../03_BUILD_backup_*.tar.gz"
+```
+
+---
+
+## PART 8: FINAL FILE MANIFEST
+
+### After cleanup and flat structure migration:
+
+```
+03_BUILD/
+├── .htaccess
+├── index.html
+├── sitemap.xml
+├── about.html
+├── contact.html
+├── services.html
+├── request-a-quote.html
+├── resources.html
+├── downloads.html
+│
+├── locations/
+│   └── bangalore.html
+│
+├── eot-cranes/
+│   ├── index.html
+│   └── double-girder.html
+│
+├── gantry-cranes/
+│   └── index.html
+│
+├── hoists/
+│   └── index.html
+│
+├── jib-cranes/
+│   └── index.html
+│
+├── spare-parts/
+│   └── index.html
+│
+└── assets/
+    ├── css/
+    │   ├── base.css
+    │   ├── components.css
+    │   ├── dna.css
+    │   ├── tokens.css
+    │   └── COMPONENT_CONTRACT.md
+    ├── js/
+    │   ├── site.js
+    │   └── JS_CONTRACT.md
+    ├── img/
+    │   ├── bands/ (3 images)
+    │   ├── cards/ (9 images)
+    │   ├── cutouts/ (2 images)
+    │   ├── people/ (1 image)
+    │   └── README.md
+    └── docs/
+        └── README.md
+```
+
+**Total:** 15 HTML files, 29 CSS/JS/doc files, 15 images = 59 files (clean)
+
+---
+
+## SUMMARY
+
+### What's broken:
+1. ❌ Downloaded website is wrong source (FullOption Craft, not SVMH)
+2. ❌ hub.html is duplicate with broken navigation
+3. ❌ double-girder.html has wrong CSS paths
+4. ❌ Navigation links point to non-existent root files
+5. ❌ 6 .DS_Store junk files
+
+### What needs to be done:
+1. **Delete** downloaded website (wrong source)
+2. **Delete** hub.html duplicate
+3. **Delete** all .DS_Store files
+4. **Fix** double-girder.html CSS paths
+5. **Choose structure** (flat vs hierarchical)
+6. **Migrate files** to match canonical URLs
+7. **Update** all internal links
+8. **Test** thoroughly
+
+### Recommended approach:
+**FLAT STRUCTURE** - Move files to root to match canonical URLs. Simpler, more portable, easier to debug.
+
+---
+
+## APPENDIX: Quick Reference
+
+### Files to DELETE:
+```
+03_BUILD/.DS_Store
+03_BUILD/assets/.DS_Store
+03_BUILD/assets/img/.DS_Store
+03_BUILD/assets/img/cutouts/.DS_Store
+03_BUILD/pages/.DS_Store
+03_BUILD/products/.DS_Store
+03_BUILD/products/eot-cranes/hub.html
+```
+
+### Navigation Links to Fix:
+```
+/products/eot-cranes → /eot-cranes
+/products/gantry-cranes → /gantry-cranes
+/products/hoists → /hoists
+/products/jib-cranes → /jib-cranes
+/products/spare-parts → /spare-parts
+/services.html → /services
+/resources.html → /resources
+/about.html → /about
+```
+
+### CSS Path Corrections:
+```
+double-girder.html: ../assets/css/ → ../../assets/css/ (BEFORE migration)
+                    or ../assets/css/ (AFTER migration to eot-cranes/ at root)
+
+Root pages:        ../../assets/css/ → assets/css/ (AFTER moving to root)
+bangalore.html:    ../assets/css/ → assets/css/ (IF locations/ moves to root)
+```
+
+---
+
+**END OF REPORT**
